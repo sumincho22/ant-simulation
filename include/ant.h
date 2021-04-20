@@ -13,6 +13,9 @@ class Ant {
   void UpdatePosition();
 
  private:
+  float kSpeed = 4;
+  float kRadius = 4;
+
   ci::Color color_;
   glm::vec2 position_;
   glm::vec2 velocity_;

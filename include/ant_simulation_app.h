@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ant.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
@@ -19,6 +20,7 @@ class AntSimApp : public ci::app::App {
   const int kWindowSize = 875;
 
  private:
+  Ant ant_;
 };
 
 }  // namespace antsim
