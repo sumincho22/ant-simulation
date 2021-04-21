@@ -10,10 +10,12 @@ namespace antsim {
 class Ant {
  public:
   Ant(const ci::Color& color, const glm::vec2& position, const glm::vec2& velocity);
-
+  
   void DrawModel();
 
   void UpdatePosition();
+  void NegateXVel();
+  void NegateYVel();
 
  private:
   float kSpeed = 1;

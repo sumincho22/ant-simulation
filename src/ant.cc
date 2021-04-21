@@ -36,9 +36,24 @@ void Ant::UpdatePosition() {
     frame_count_ = 0;
   }
 
+  if (position_.x <= 0 || position_.x >= 1500) {
+    NegateXVel();
+  }
+  if (position_.y <= 0 || position_.y >= 1000) {
+    NegateYVel();
+  }
+
   position_ += velocity_;
 
   frame_count_++;
+}
+
+void Ant::NegateXVel() {
+  velocity_.x *= -1;
+}
+
+void Ant::NegateYVel() {
+  velocity_.y *= -1;
 }
 
 }  // namespace antsim
