@@ -9,8 +9,8 @@ namespace antsim {
 
 class Ant {
  public:
-  Ant(const ci::Color& color, const glm::vec2& position, const glm::vec2& velocity);
-  
+  Ant(const glm::vec2& position, const glm::vec2& velocity);
+
   void DrawModel();
 
   void UpdatePosition();
@@ -20,12 +20,13 @@ class Ant {
  private:
   float kSpeed = 1;
   float kStartingAngle = static_cast<float>(M_PI) / 2;
-  float kRadius = 4;
+
+  float kWindowLength = 1500;
+  float kWindowHeight = 1000;
 
   size_t kSmallChange = 10;
   size_t kBigChange = 100;
 
-  ci::Color color_;
   glm::vec2 position_;
   glm::vec2 velocity_;
   Direction direction_;

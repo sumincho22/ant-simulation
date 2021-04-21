@@ -3,7 +3,7 @@
 namespace antsim {
 
 AntSimApp::AntSimApp() :
-      ant_(ci::Color("red"), glm::vec2(kWindowWidth / 2, kWindowHeight / 2), glm::vec2(1, 0)) {
+      ant_(glm::vec2(kWindowWidth / 3, kWindowHeight / 3), glm::vec2(1, 0)) {
   ci::app::setWindowSize(kWindowWidth, kWindowHeight);
 }
 

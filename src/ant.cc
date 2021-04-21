@@ -5,10 +5,9 @@ using glm::vec2;
 
 namespace antsim {
 
-Ant::Ant(const Color& color, const vec2& position, const vec2& velocity) :
+Ant::Ant(const vec2& position, const vec2& velocity) :
  direction_(kSpeed, kStartingAngle)
 {
-  color_ = color;
   position_ = position;
   velocity_ = velocity;
   frame_count_ = 0;
@@ -21,25 +20,23 @@ Ant::Ant(const Color& color, const vec2& position, const vec2& velocity) :
 void Ant::DrawModel() {
   ci::gl::pushModelMatrix();
   ci::gl::translate(position_);
-  ci::gl::scale(0.05f, 0.05f);
-  ci::gl::rotate(direction_.GetAngle());
+  ci::gl::scale(0.03f, 0.03f);
   ci::gl::draw(ant_model_);
   ci::gl::popModelMatrix();
 }
 
 void Ant::UpdatePosition() {
-  if (frame_count_ % kSmallChange == 0) {
-    direction_.ApplySmallTurn(velocity_);
-  }
   if (frame_count_ == kBigChange) {
     direction_.ApplyBigTurn(velocity_);
     frame_count_ = 0;
+  } else if (frame_count_ % kSmallChange == 0) {
+    direction_.ApplySmallTurn(velocity_);
   }
 
-  if (position_.x <= 0 || position_.x >= 1500) {
+  if (position_.x <= 0 || position_.x >= kWindowLength) {
     NegateXVel();
   }
-  if (position_.y <= 0 || position_.y >= 1000) {
+  if (position_.y <= 0 || position_.y >= kWindowHeight) {
     NegateYVel();
   }
 
