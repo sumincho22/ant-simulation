@@ -7,12 +7,12 @@
 namespace antsim {
 
 /**
- * This class handles the directional functions of an Ant and its movements
+ * This class handles the directional functions of an Ant and its movements.
  */
 class Direction {
  public:
   /**
-   * Creates a Direction object with the provided parameters
+   * Creates a Direction object with the provided parameters.
    *
    * @param speed the speed of the Ant
    * @param angle the starting angle the Ant is directed towards
@@ -20,14 +20,14 @@ class Direction {
   Direction(const float speed, const float angle);
 
   /**
-   * Applies a minimal angle rotation to the Ant's velocity vector
+   * Applies a minimal angle rotation to the Ant's velocity vector.
    *
    * @param velocity the Ant's velocity
    */
   void ApplySmallTurn(glm::vec2& velocity);
 
   /**
-   * Applies a relatively large angle rotation to the Ant's velocity vector
+   * Applies a relatively large angle rotation to the Ant's velocity vector.
    *
    * @param velocity the Ant's velocity
    */

@@ -7,10 +7,19 @@
 
 namespace antsim {
 
+/**
+ * This class holds all the properties of an Ant.
+ */
 class Ant {
  public:
+  /**
+   * Creates an Ant with the provided position and velocity.
+   *
+   * @param position the location of the Ant (the x- and y-coordinates)
+   * @param velocity the velocity of the Ant (in x- and y-velocities)
+   */
   Ant(const glm::vec2& position, const glm::vec2& velocity);
-
+  
   void DrawModel();
 
   void UpdatePosition();
