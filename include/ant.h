@@ -29,6 +29,8 @@ class Ant {
   Direction direction_;
   size_t frame_count_;
 
+  ci::gl::Texture2dRef ant_model_;
+
 };
 
 }  // namespace antsim

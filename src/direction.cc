@@ -19,6 +19,8 @@ void Direction::ApplyBigTurn(glm::vec2& velocity) {
   velocity = glm::vec2(speed_ * cos(angle_), speed_ * sin(angle_));
 }
 
+const float Direction::GetAngle() const { return angle_; }
+
 const float Direction::GetRandomValue(const float min_value, const float max_value) const {
   return min_value + (static_cast<float>(rand()) /
                       static_cast<float>(RAND_MAX) * (max_value - min_value));

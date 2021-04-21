@@ -13,6 +13,8 @@ class Direction {
   void ApplySmallTurn(glm::vec2& velocity);
   void ApplyBigTurn(glm::vec2& velocity);
 
+  const float GetAngle() const;
+
  private:
   float kSmallTurn = static_cast<float>(M_PI) / 8;
   float kBigTurn = static_cast<float>(M_PI) / 2;

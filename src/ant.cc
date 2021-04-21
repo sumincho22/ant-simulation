@@ -12,11 +12,19 @@ Ant::Ant(const Color& color, const vec2& position, const vec2& velocity) :
   position_ = position;
   velocity_ = velocity;
   frame_count_ = 0;
+
+  ci::Surface surface(60, 75, true);
+  auto image = ci::loadImage(R"(C:\Users\scycl\Desktop\Cinder\my-projects\final-project-sumincho22\assets\ant.png)");
+  ant_model_ = ci::gl::Texture2d::create(image);
 }
 
 void Ant::DrawModel() {
-  ci::gl::color(Color(color_));
-  ci::gl::drawSolidCircle(position_, kRadius);
+  ci::gl::pushModelMatrix();
+  ci::gl::translate(position_);
+  ci::gl::scale(0.05f, 0.05f);
+  ci::gl::rotate(direction_.GetAngle());
+  ci::gl::draw(ant_model_);
+  ci::gl::popModelMatrix();
 }
 
 void Ant::UpdatePosition() {
