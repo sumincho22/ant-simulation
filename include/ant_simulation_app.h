@@ -17,7 +17,8 @@ class AntSimApp : public ci::app::App {
   void draw() override;
   void update() override;
 
-  const int kWindowSize = 875;
+  const int kWindowWidth = 1500;
+  const int kWindowHeight = 1000;
 
  private:
   Ant ant_;
