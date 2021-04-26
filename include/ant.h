@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <stdlib.h>
 
 #include "cinder/gl/gl.h"
 #include "direction.h"
@@ -19,11 +18,13 @@ class Ant {
    * @param position the location of the Ant (the x- and y-coordinates)
    * @param velocity the velocity of the Ant (in x- and y-velocities)
    */
-  Ant(const glm::vec2& position, const glm::vec2& velocity);
+  Ant(const glm::vec2& position, const float angle, const float speed);
 
   void AdvanceOneFrame();
 
   void DrawModel();
+
+  void HandleMovement();
 
   void Wander();
 
@@ -32,25 +33,23 @@ class Ant {
   void NegateYVel();
 
  private:
-  float kSmallTurn = static_cast<float>(M_PI) / 8;
-  float kBigTurn = static_cast<float>(M_PI) / 2;
+  const float kModelScale = 0.03f;
 
-  float kSpeed = 1;
-  float kStartingAngle = static_cast<float>(M_PI) / 2;
+  const size_t kSmallChange = 10;
+  const size_t kBigChange = 100;
 
-  float kWindowLength = 1500;
-  float kWindowHeight = 1000;
+  const float kSmallTurn = static_cast<float>(M_PI) / 8;
+  const float kBigTurn = static_cast<float>(M_PI) / 2;
 
-  size_t kSmallChange = 10;
-  size_t kBigChange = 100;
+  size_t frame_count_;
 
   glm::vec2 position_;
   glm::vec2 velocity_;
+
   Direction direction_;
-  size_t frame_count_;
 
-  ci::gl::Texture2dRef ant_model_;
-
+  static float width_;
+  static float height_;
 };
 
 }  // namespace antsim

@@ -3,8 +3,9 @@
 namespace antsim {
 
 AntSimApp::AntSimApp() :
-      ant_(glm::vec2(kWindowWidth / 3, kWindowHeight / 3), glm::vec2(1, 0)) {
+      ant_(glm::vec2(kWindowWidth / 3, kWindowHeight / 3), 0, 2) {
   ci::app::setWindowSize(kWindowWidth, kWindowHeight);
+  ci::app::setFullScreen();
 }
 
 void AntSimApp::draw() {
@@ -15,7 +16,7 @@ void AntSimApp::draw() {
 }
 
 void AntSimApp::update() {
-  ant_.UpdatePosition();
+  ant_.AdvanceOneFrame();
 }
 
 }  // namespace antsim
