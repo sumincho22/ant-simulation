@@ -11,7 +11,7 @@ void AntSimApp::draw() {
   ci::Color background_color("black");
   ci::gl::clear(background_color);
 
-  colony_.Draw();
+  colony_.Render();
 }
 
 void AntSimApp::update() {

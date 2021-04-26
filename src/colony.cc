@@ -17,13 +17,9 @@ void Colony::AdvanceOneFrame() {
   }
 }
 
-void Colony::Draw() {
-  for (const Ant& ant : ants_) {
-    ant.DrawModel();
-  }
-
-  ci::gl::color(ci::Color("green"));
+void Colony::Render() {
   ci::gl::drawSolidCircle(position_, radius_);
+  RenderAnts();
 }
 
 void Colony::GenerateAnts(size_t population) {
@@ -40,6 +36,12 @@ void Colony::GenerateAnts(size_t population) {
 
 bool Colony::IsAtColony(const Ant& ant) {
   return glm::length(ant.GetPosition() - position_) == radius_;
+}
+
+void Colony::RenderAnts() {
+  for (const Ant& ant : ants_) {
+    ant.DrawModel();
+  }
 }
 
 }

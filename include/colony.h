@@ -10,7 +10,7 @@ class Colony {
 
   void AdvanceOneFrame();
 
-  void Draw();
+  void Render();
 
  private:
   const float kAntSpeed = 2;
@@ -23,6 +23,8 @@ class Colony {
   void GenerateAnts(const size_t population);
 
   bool IsAtColony(const Ant& ant);
+
+  void RenderAnts();
 
 };
 
