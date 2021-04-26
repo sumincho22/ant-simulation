@@ -22,7 +22,7 @@ void Ant::AdvanceOneFrame() {
   frame_count_++;
 }
 
-void Ant::DrawModel() {
+void Ant::DrawModel() const {
   // loading
   static ci::gl::Texture2dRef ant_model = ci::gl::Texture2d::create(ci::loadImage(
       R"(C:\Users\scycl\Desktop\Cinder\my-projects\final-project-sumincho22\assets\ant.png)"));

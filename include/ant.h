@@ -22,7 +22,7 @@ class Ant {
 
   void AdvanceOneFrame();
 
-  void DrawModel();
+  void DrawModel() const;
 
  private:
   const float kModelScale = 0.03f;

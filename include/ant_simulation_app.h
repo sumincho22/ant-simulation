@@ -4,6 +4,7 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "colony.h"
 
 namespace antsim {
 
@@ -21,7 +22,7 @@ class AntSimApp : public ci::app::App {
   const int kWindowHeight = 1080;
 
  private:
-  Ant ant_;
+  Colony colony_;
 };
 
 }  // namespace antsim

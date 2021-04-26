@@ -3,7 +3,7 @@
 namespace antsim {
 
 AntSimApp::AntSimApp() :
-      ant_(glm::vec2(kWindowWidth / 3, kWindowHeight / 3), 0, 2) {
+      colony_(100, glm::vec2(kWindowWidth / 2.0f, kWindowHeight / 2.0f), 50) {
   ci::app::setWindowSize(kWindowWidth, kWindowHeight);
   ci::app::setFullScreen();
 }
@@ -12,11 +12,11 @@ void AntSimApp::draw() {
   ci::Color background_color("black");
   ci::gl::clear(background_color);
 
-  ant_.DrawModel();
+  colony_.Draw();
 }
 
 void AntSimApp::update() {
-  ant_.AdvanceOneFrame();
+  colony_.AdvanceOneFrame();
 }
 
 }  // namespace antsim
