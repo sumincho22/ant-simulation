@@ -28,7 +28,7 @@ class Ant {
   const float kModelScale = 0.03f;
 
   const size_t kSmallChange = 10;
-  const size_t kBigChange = 100;
+  const size_t kBigChange = 200;
 
   const float kSmallTurn = static_cast<float>(M_PI) / 8;
   const float kBigTurn = static_cast<float>(M_PI) / 2;
