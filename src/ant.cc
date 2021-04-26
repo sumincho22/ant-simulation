@@ -6,6 +6,7 @@ using ci::Color;
 using glm::vec2;
 
 namespace antsim {
+//
 float Ant::width_ = -1;
 float Ant::height_ = -1;
 
@@ -22,13 +23,15 @@ void Ant::AdvanceOneFrame() {
 }
 
 void Ant::DrawModel() {
+  // loading
   static ci::gl::Texture2dRef ant_model = ci::gl::Texture2d::create(ci::loadImage(
       R"(C:\Users\scycl\Desktop\Cinder\my-projects\final-project-sumincho22\assets\ant.png)"));
-  if (width_ == -1 && height_ == -1){
+  if (width_ == -1 && height_ == -1) {
     width_ = static_cast<float>(ant_model->getWidth());
     height_ = static_cast<float>(ant_model->getHeight());
   }
 
+  // drawing
   ci::gl::pushModelMatrix();
   ci::gl::translate(position_ +
                     kModelScale *
@@ -45,11 +48,9 @@ void Ant::DrawModel() {
 
 void Ant::HandleMovement() {
   if (position_.x + width_ > ci::app::getWindowSize().x || position_.x < 0) {
-    NegateXVel();
-    UpdatePosition();
+    CollideVertBound();
   } else if (position_.y + height_ > ci::app::getWindowSize().y || position_.y < 0) {
-    NegateYVel();
-    UpdatePosition();
+    CollideHorizBound();
   } else {
     Wander();
   }
@@ -82,6 +83,18 @@ void Ant::NegateXVel() {
 
 void Ant::NegateYVel() {
   velocity_.y *= -1;
+}
+
+void Ant::CollideVertBound() {
+  NegateXVel();
+  direction_.TurnAround();
+  UpdatePosition();
+}
+
+void Ant::CollideHorizBound() {
+  NegateYVel();
+  direction_.TurnAround();
+  UpdatePosition();
 }
 
 }  // namespace antsim

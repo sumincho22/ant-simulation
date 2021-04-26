@@ -24,14 +24,6 @@ class Ant {
 
   void DrawModel();
 
-  void HandleMovement();
-
-  void Wander();
-
-  void UpdatePosition();
-  void NegateXVel();
-  void NegateYVel();
-
  private:
   const float kModelScale = 0.03f;
 
@@ -50,6 +42,17 @@ class Ant {
 
   static float width_;
   static float height_;
+
+  void HandleMovement();
+
+  void CollideVertBound();
+  void CollideHorizBound();
+  void Wander();
+
+  void UpdatePosition();
+
+  void NegateXVel();
+  void NegateYVel();
 };
 
 }  // namespace antsim

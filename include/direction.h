@@ -27,12 +27,15 @@ class Direction {
    */
   void ApplyTurn(glm::vec2& velocity, float max_angle);
 
+  void TurnAround();
+
   const float GetAngle() const;
-  const float GetRandomValue(const float min_value, const float max_value) const;
 
  private:
   float speed_;
   float angle_;
+
+  const float GetRandomValue(const float min_value, const float max_value) const;
 };
 
 }  // namespace antsim
