@@ -18,10 +18,10 @@ class AntSimApp : public ci::app::App {
   void draw() override;
   void update() override;
 
-  const int kWindowWidth = 1920;
-  const int kWindowHeight = 1080;
-
  private:
+  const float kColonyPosX = 960;
+  const float kColonyPosY = 540;
+
   Colony colony_;
 };
 

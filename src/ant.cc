@@ -27,29 +27,24 @@ void Ant::DrawModel() const {
   static ci::gl::Texture2dRef ant_model = ci::gl::Texture2d::create(ci::loadImage(
       R"(C:\Users\scycl\Desktop\Cinder\my-projects\final-project-sumincho22\assets\ant.png)"));
   if (width_ == -1 && height_ == -1) {
-    width_ = static_cast<float>(ant_model->getWidth());
-    height_ = static_cast<float>(ant_model->getHeight());
+    width_ = kModelScale * static_cast<float>(ant_model->getWidth());
+    height_ = kModelScale * static_cast<float>(ant_model->getHeight());
   }
 
   // drawing
   ci::gl::pushModelMatrix();
-  ci::gl::translate(position_ +
-                    kModelScale *
-                        glm::vec2(width_ / 2.0f,
-                                          height_ / 2.0f));
+  ci::gl::translate(position_ + glm::vec2(width_ / 2.0f, height_ / 2.0f));
   ci::gl::rotate(direction_.GetAngle());
-  ci::gl::translate(-kModelScale *
-                    glm::vec2(width_ / 2.0f,
-                              height_ / 2.0f));
+  ci::gl::translate(-glm::vec2(width_ / 2.0f, height_ / 2.0f));
   ci::gl::scale(kModelScale, kModelScale);
   ci::gl::draw(ant_model);
   ci::gl::popModelMatrix();
 }
 
 void Ant::HandleMovement() {
-  if (position_.x + width_ > ci::app::getWindowSize().x || position_.x < 0) {
+  if ((position_.x + width_ >= ci::app::getWindowSize().x && velocity_.x * width_ > 0) || position_.x < 0) {
     CollideVertBound();
-  } else if (position_.y + height_ > ci::app::getWindowSize().y || position_.y < 0) {
+  } else if ((position_.y + height_ >= ci::app::getWindowSize().y && velocity_.y * height_ > 0) || position_.y < 0) {
     CollideHorizBound();
   } else {
     Wander();

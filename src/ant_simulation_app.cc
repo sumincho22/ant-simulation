@@ -3,8 +3,7 @@
 namespace antsim {
 
 AntSimApp::AntSimApp() :
-      colony_(100, glm::vec2(kWindowWidth / 2.0f, kWindowHeight / 2.0f), 50) {
-  ci::app::setWindowSize(kWindowWidth, kWindowHeight);
+      colony_(50, glm::vec2(kColonyPosX, kColonyPosY), 50) {
   ci::app::setFullScreen();
 }
 
