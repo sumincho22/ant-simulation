@@ -22,6 +22,8 @@ class Colony {
 
   void GenerateAnts(const size_t population);
 
+  bool IsAtColony(const Ant& ant);
+
 };
 
 }

@@ -14,6 +14,7 @@ Ant::Ant(const glm::vec2& position, const float angle, const float speed)
     : direction_(speed, angle) {
   position_ = position;
   velocity_ = vec2();
+  state_ = State::kWandering;
   frame_count_ = 0;
 }
 
@@ -39,15 +40,31 @@ void Ant::DrawModel() const {
   ci::gl::scale(kModelScale, kModelScale);
   ci::gl::draw(ant_model);
   ci::gl::popModelMatrix();
+
+  if (state_ == kGoingHome) {
+    RenderFood();
+  }
 }
 
 void Ant::HandleMovement() {
   if ((position_.x + width_ >= ci::app::getWindowSize().x && velocity_.x * width_ > 0) || position_.x < 0) {
     CollideVertBound();
+    return;
   } else if ((position_.y + height_ >= ci::app::getWindowSize().y && velocity_.y * height_ > 0) || position_.y < 0) {
     CollideHorizBound();
-  } else {
-    Wander();
+    return;
+  }
+
+  switch (state_) {
+    case kWandering:
+      Wander();
+      break;
+    case kGettingFood:
+      break;
+    case kGoingHome:
+      break;
+    default:
+      break;
   }
 }
 
@@ -90,6 +107,23 @@ void Ant::CollideHorizBound() {
   NegateYVel();
   direction_.TurnAround();
   UpdatePosition();
+}
+
+State Ant::GetState() const {
+  return state_;
+}
+
+void Ant::SetState(State state) {
+  state_ = state;
+}
+
+const vec2& Ant::GetPosition() const {
+  return position_;
+}
+
+void Ant::RenderFood() const {
+  ci::gl::color(ci::Color("green"));
+  ci::gl::drawSolidCircle(position_, 5);
 }
 
 }  // namespace antsim

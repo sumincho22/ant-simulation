@@ -4,6 +4,7 @@
 
 #include "cinder/gl/gl.h"
 #include "direction.h"
+#include "state.h"
 
 namespace antsim {
 
@@ -24,6 +25,9 @@ class Ant {
 
   void DrawModel() const;
 
+  State GetState() const;
+  void SetState(State state);
+
  private:
   const float kModelScale = 0.03f;
 
@@ -36,9 +40,15 @@ class Ant {
   size_t frame_count_;
 
   glm::vec2 position_;
+
+ public:
+  const glm::vec2& GetPosition() const;
+
+ private:
   glm::vec2 velocity_;
 
   Direction direction_;
+  State state_;
 
   static float width_;
   static float height_;
@@ -53,6 +63,8 @@ class Ant {
 
   void NegateXVel();
   void NegateYVel();
+
+  void RenderFood() const;
 };
 
 }  // namespace antsim

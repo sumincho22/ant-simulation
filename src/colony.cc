@@ -10,17 +10,20 @@ Colony::Colony(const size_t population, const glm::vec2& position, const float r
 
 void Colony::AdvanceOneFrame() {
   for (Ant& ant : ants_) {
+    if (ant.GetState() == kGoingHome && IsAtColony(ant)) {
+      ant.SetState(kGettingFood);
+    }
     ant.AdvanceOneFrame();
   }
 }
 
 void Colony::Draw() {
-  ci::Color("Blue");
-  ci::gl::drawSolidCircle(position_, radius_);
-
   for (const Ant& ant : ants_) {
     ant.DrawModel();
   }
+
+  ci::gl::color(ci::Color("green"));
+  ci::gl::drawSolidCircle(position_, radius_);
 }
 
 void Colony::GenerateAnts(size_t population) {
@@ -33,6 +36,10 @@ void Colony::GenerateAnts(size_t population) {
     ants_.emplace_back(Ant(spawn_point, angle, kAntSpeed));
     angle += increment;
   }
+}
+
+bool Colony::IsAtColony(const Ant& ant) {
+  return glm::length(ant.GetPosition() - position_) == radius_;
 }
 
 }
