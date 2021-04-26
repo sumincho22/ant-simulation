@@ -20,30 +20,19 @@ class Direction {
   Direction(const float speed, const float angle);
 
   /**
-   * Applies a minimal angle rotation to the Ant's velocity vector.
+   * Applies an angle rotation to the Ant's velocity vector.
    *
-   * @param velocity the Ant's velocity
+   * @param velocity    the Ant's velocity
+   * @param max_angle   the maximum magnitude of the angle rotation
    */
-  void ApplySmallTurn(glm::vec2& velocity);
-
-  /**
-   * Applies a relatively large angle rotation to the Ant's velocity vector.
-   *
-   * @param velocity the Ant's velocity
-   */
-  void ApplyBigTurn(glm::vec2& velocity);
+  void ApplyTurn(glm::vec2& velocity, float max_angle);
 
   const float GetAngle() const;
-
- private:
-  float kSmallTurn = static_cast<float>(M_PI) / 8;
-  float kBigTurn = static_cast<float>(M_PI) / 2;
-
-  float speed_;
-  float angle_;
-
   const float GetRandomValue(const float min_value, const float max_value) const;
 
+ private:
+  float speed_;
+  float angle_;
 };
 
 }  // namespace antsim

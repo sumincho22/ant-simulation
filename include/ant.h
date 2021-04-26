@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <stdlib.h>
 
 #include "cinder/gl/gl.h"
 #include "direction.h"
@@ -19,14 +20,21 @@ class Ant {
    * @param velocity the velocity of the Ant (in x- and y-velocities)
    */
   Ant(const glm::vec2& position, const glm::vec2& velocity);
-  
+
+  void AdvanceOneFrame();
+
   void DrawModel();
+
+  void Wander();
 
   void UpdatePosition();
   void NegateXVel();
   void NegateYVel();
 
  private:
+  float kSmallTurn = static_cast<float>(M_PI) / 8;
+  float kBigTurn = static_cast<float>(M_PI) / 2;
+
   float kSpeed = 1;
   float kStartingAngle = static_cast<float>(M_PI) / 2;
 
