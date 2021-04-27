@@ -4,7 +4,7 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
-#include "colony.h"
+#include "world.h"
 
 namespace antsim {
 
@@ -19,10 +19,7 @@ class AntSimApp : public ci::app::App {
   void update() override;
 
  private:
-  const float kColonyPosX = 960;
-  const float kColonyPosY = 540;
-
-  Colony colony_;
+  World world_;
 };
 
 }  // namespace antsim

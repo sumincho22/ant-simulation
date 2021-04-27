@@ -17,7 +17,7 @@ void Colony::AdvanceOneFrame() {
   }
 }
 
-void Colony::Render() {
+void Colony::Render() const {
   ci::gl::drawSolidCircle(position_, radius_);
   RenderAnts();
 }
@@ -38,7 +38,7 @@ bool Colony::IsAtColony(const Ant& ant) {
   return glm::length(ant.GetPosition() - position_) == radius_;
 }
 
-void Colony::RenderAnts() {
+void Colony::RenderAnts() const {
   for (const Ant& ant : ants_) {
     ant.DrawModel();
   }
