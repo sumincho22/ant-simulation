@@ -34,7 +34,7 @@ void Ant::DrawModel() const {
 
   // drawing
   ci::gl::pushModelMatrix();
-  ci::gl::translate(position_ + glm::vec2(width_ / 2.0f, height_ / 2.0f));
+  ci::gl::translate(position_);
   ci::gl::rotate(direction_.GetAngle());
   ci::gl::translate(-glm::vec2(width_ / 2.0f, height_ / 2.0f));
   ci::gl::scale(kModelScale, kModelScale);
@@ -47,10 +47,14 @@ void Ant::DrawModel() const {
 }
 
 void Ant::HandleMovement() {
-  if ((position_.x + width_ >= ci::app::getWindowSize().x && velocity_.x * width_ > 0) || position_.x < 0) {
+  if ((position_.x + (width_ / 2.0f) >= ci::app::getWindowSize().x &&
+       velocity_.x > 0) ||
+      (position_.x - (width_ / 2.0f) < 0 && velocity_.x < 0)) {
     CollideVertBound();
     return;
-  } else if ((position_.y + height_ >= ci::app::getWindowSize().y && velocity_.y * height_ > 0) || position_.y < 0) {
+  } else if ((position_.y + (height_ / 2.0f) >= ci::app::getWindowSize().y &&
+              velocity_.y > 0) ||
+             (position_.y - (height_ / 2.0f) < 0 && velocity_.y < 0)) {
     CollideHorizBound();
     return;
   }
