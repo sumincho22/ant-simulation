@@ -29,13 +29,15 @@ void World::AdvanceOneFrame() {
         }
       }
 
+      // Going back home carrying the food
       if (ant.GetState() == kGoingHome &&
           IsAtLocation(ant.GetPosition(), colony.GetPosition(),
                        colony.GetRadius())) {
+        ant.ClearMarkers();
         ant.SetState(kGettingFood);
       }
 
-      if (frame_count_ % 5 == 0) {
+      if (ant.GetState() != kGoingHome && (frame_count_ == 0 || frame_count_ % 20 == 0)) {
         size_t pos_x = static_cast<size_t>(floor(ant.GetPosition().x)) / kAntSpeed;
         size_t pos_y = static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
         ant.AddMarker(&grid_[pos_x][pos_y]);

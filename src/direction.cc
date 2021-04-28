@@ -42,6 +42,9 @@ void Direction::TurnTowardsPoint(glm::vec2& velocity,
   angle_ = angle_magnitude;
 
   velocity = speed_ * glm::vec2(cos(angle_), (pos_diff.x > 0 ? 1 : -1) * sin(angle_));
+
+  // TODO: temporary fix -- only fixes some angles
+  angle_ = atan(pos_diff.y / pos_diff.x) - static_cast<float>(M_PI);
 }
 
 }  // namespace antsim

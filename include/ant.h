@@ -28,44 +28,41 @@ class Ant {
 
   void AddMarker(MarkablePoint* marker);
   void IncrementMarkers();
+  void ClearMarkers();
 
-  void FollowMarkers();
-
+  const glm::vec2& GetPosition() const;
   State GetState() const;
   void SetState(State state);
 
  private:
   const float kModelScale = 0.03f;
 
+  // Constants for small and big turn probabilities
   const size_t kSmallChange = 10;
   const size_t kBigChange = 200;
 
+  // Angle rotation increments for small and big turns
   const float kSmallTurn = static_cast<float>(M_PI) / 8;
   const float kBigTurn = static_cast<float>(M_PI) / 2;
-
-  size_t frame_count_;
-
-  glm::vec2 position_;
-
- public:
-  const glm::vec2& GetPosition() const;
-
- private:
-  glm::vec2 velocity_;
-
-  Direction direction_;
-  State state_;
-  std::vector<MarkablePoint*> markable_points_;
-  size_t point_index_;
 
   static float width_;
   static float height_;
 
-  void HandleMovement();
+  size_t frame_count_;
+  size_t point_index_;
 
+  glm::vec2 start_pos_;
+  glm::vec2 position_;
+  glm::vec2 velocity_;
+  Direction direction_;
+  State state_;
+  std::vector<MarkablePoint*> markable_points_;
+
+  void HandleMovement();
   void CollideVertBound();
   void CollideHorizBound();
   void Wander();
+  void FollowMarkers();
 
   void UpdatePosition();
 

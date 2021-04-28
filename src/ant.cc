@@ -12,6 +12,7 @@ float Ant::height_ = -1;
 
 Ant::Ant(const glm::vec2& position, const float angle, const float speed)
     : direction_(speed, angle) {
+  start_pos_ = position;
   position_ = position;
   velocity_ = vec2();
   state_ = State::kWandering;
@@ -145,12 +146,19 @@ void Ant::IncrementMarkers() {
   }
 }
 
+void Ant::ClearMarkers() {
+  markable_points_.clear();
+  point_index_ = 0;
+}
+
 void Ant::FollowMarkers() {
-  if (2.0f * (markable_points_[point_index_]->position) == position_ || markable_points_[point_index_]->count==0) {
+  if (glm::length(2.0f * (markable_points_[point_index_]->position) - position_) <= width_) {
     if (point_index_ == 0) {
+      MoveTowardsPoint(start_pos_);
       return;
     }
     point_index_--;
+    markable_points_.pop_back();
   }
   MoveTowardsPoint(2.0f * (markable_points_[point_index_]->position));
 }

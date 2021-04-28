@@ -16,8 +16,8 @@ void Colony::AdvanceOneFrame() {
 void Colony::Render() const {
   ci::gl::color(ci::Color("purple"));
   ci::gl::drawSolidCircle(position_, radius_);
-  ci::gl::color(1,1,1);
 
+  ci::gl::color(1, 1, 1);
   RenderAnts();
 }
 
@@ -25,10 +25,9 @@ void Colony::GenerateAnts(size_t population) {
   float angle = 0;
   float increment = (2.0f * static_cast<float>(M_PI)) / population;
   for (size_t i = 0; i < population; ++i) {
-    glm::vec2 offset = glm::vec2(radius_ * cos(angle), radius_ * sin(angle));
-    glm::vec2 spawn_point = position_ + offset;
-
-    ants_.emplace_back(Ant(spawn_point, angle, kAntSpeed));
+//    glm::vec2 offset = glm::vec2(radius_ * cos(angle), radius_ * sin(angle));
+//    glm::vec2 spawn_point = position_ + offset;
+    ants_.emplace_back(Ant(position_, angle, kAntSpeed));
     angle += increment;
   }
 }
