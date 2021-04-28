@@ -17,6 +17,9 @@ void Colony::Render() const {
   ci::gl::color(ci::Color("purple"));
   ci::gl::drawSolidCircle(position_, radius_);
   ci::gl::color(1,1,1);
+
+  ci::gl::drawSolidCircle({ 500, 500 }, 5.0f);
+
   RenderAnts();
 }
 

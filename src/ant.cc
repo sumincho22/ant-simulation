@@ -16,6 +16,7 @@ Ant::Ant(const glm::vec2& position, const float angle, const float speed)
   velocity_ = vec2();
   state_ = State::kWandering;
   frame_count_ = 0;
+  point_index_ = 0;
 }
 
 void Ant::AdvanceOneFrame() {
@@ -67,7 +68,7 @@ void Ant::HandleMovement() {
       Wander();
       break;
     case kGoingHome:
-      Wander();
+      FollowMarkers();
       break;
     default:
       break;
@@ -135,12 +136,29 @@ void Ant::RenderFood() const {
 
 void Ant::AddMarker(MarkablePoint* marker) {
   markable_points_.emplace_back(marker);
+  point_index_ = markable_points_.size() - 1;
 }
 
 void Ant::IncrementMarkers() {
   for (MarkablePoint* marker : markable_points_) {
     marker->count++;
   }
+}
+
+void Ant::FollowMarkers() {
+  if (2.0f * (markable_points_[point_index_]->position) == position_ || markable_points_[point_index_]->count==0) {
+    if (point_index_ == 0) {
+      return;
+    }
+    point_index_--;
+  }
+  MoveTowardsPoint(2.0f * (markable_points_[point_index_]->position));
+}
+
+void Ant::MoveTowardsPoint(const glm::vec2& point) {
+  glm::vec2 pos_diff = point - position_;
+  direction_.TurnTowardsPoint(velocity_, pos_diff);
+  UpdatePosition();
 }
 
 }  // namespace antsim

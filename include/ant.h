@@ -29,6 +29,8 @@ class Ant {
   void AddMarker(MarkablePoint* marker);
   void IncrementMarkers();
 
+  void FollowMarkers();
+
   State GetState() const;
   void SetState(State state);
 
@@ -54,6 +56,7 @@ class Ant {
   Direction direction_;
   State state_;
   std::vector<MarkablePoint*> markable_points_;
+  size_t point_index_;
 
   static float width_;
   static float height_;
@@ -70,6 +73,8 @@ class Ant {
   void NegateYVel();
 
   void RenderFood() const;
+
+  void MoveTowardsPoint(const glm::vec2& point);
 };
 
 }  // namespace antsim

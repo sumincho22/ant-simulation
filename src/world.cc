@@ -25,6 +25,7 @@ void World::AdvanceOneFrame() {
             IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
                          food_source.GetRadius())) {
           ant.SetState(kGoingHome);
+          ant.IncrementMarkers();
         }
       }
 

@@ -28,6 +28,7 @@ class Direction {
   void ApplyTurn(glm::vec2& velocity, float max_angle);
 
   void TurnAround();
+  void TurnTowardsPoint(glm::vec2& velocity, const glm::vec2& pos_diff);
 
   const float GetAngle() const;
 
