@@ -16,10 +16,14 @@ class World {
 
  private:
   const size_t kAntSpeed = 2;
+  const size_t kWindowWidth = 1920;
+  const size_t kWindowHeight = 1080;
 
   // Constants for colony properties
   const size_t kMaxPopulation = 100;
   const float kColonyRadius = 50;
+
+  size_t frame_count_;
 
   std::vector<std::vector<MarkablePoint>> grid_;
   std::vector<Colony> colonies_;
@@ -28,6 +32,8 @@ class World {
   void GenerateGrid();
   void GenerateColonies(const size_t num_colonies);
   void GenerateFoodSources(const size_t num_food_sources);
+
+  bool IsAtLocation(const glm::vec2& ant_position, const glm::vec2& location, const float radius);
 };
 
 }

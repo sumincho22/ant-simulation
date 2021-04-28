@@ -64,6 +64,7 @@ void Ant::HandleMovement() {
       Wander();
       break;
     case kGettingFood:
+      Wander();
       break;
     case kGoingHome:
       Wander();
@@ -130,6 +131,16 @@ void Ant::RenderFood() const {
   ci::gl::color(ci::Color("green"));
   ci::gl::drawSolidCircle(position_, 5);
   ci::gl::color(1,1,1);
+}
+
+void Ant::AddMarker(MarkablePoint* marker) {
+  markable_points_.emplace_back(marker);
+}
+
+void Ant::IncrementMarkers() {
+  for (MarkablePoint* marker : markable_points_) {
+    marker->count++;
+  }
 }
 
 }  // namespace antsim

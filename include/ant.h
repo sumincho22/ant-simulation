@@ -4,6 +4,7 @@
 
 #include "cinder/gl/gl.h"
 #include "direction.h"
+#include "markable_point.h"
 #include "state.h"
 
 namespace antsim {
@@ -24,6 +25,9 @@ class Ant {
   void AdvanceOneFrame();
 
   void DrawModel() const;
+
+  void AddMarker(MarkablePoint* marker);
+  void IncrementMarkers();
 
   State GetState() const;
   void SetState(State state);
@@ -49,6 +53,7 @@ class Ant {
 
   Direction direction_;
   State state_;
+  std::vector<MarkablePoint*> markable_points_;
 
   static float width_;
   static float height_;

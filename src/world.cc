@@ -18,24 +18,40 @@ void World::Render() const {
 }
 
 void World::AdvanceOneFrame() {
-  for (FoodSource& food_source : food_sources_) {
-    for (Colony& colony : colonies_) {
-      for (Ant& ant : colony.GetAnts()) {
-        if (ant.GetState() != kGoingHome && glm::length(ant.GetPosition() - food_source.GetPosition()) <= food_source.GetRadius()) {
+  for (Colony& colony : colonies_) {
+    for (Ant& ant : colony.GetAnts()) {
+      for (FoodSource& food_source : food_sources_) {
+        if (ant.GetState() != kGoingHome &&
+            IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
+                         food_source.GetRadius())) {
           ant.SetState(kGoingHome);
         }
-        if (ant.GetState() == kGoingHome && glm::length(ant.GetPosition() - colony.GetPosition()) <= colony.GetRadius()) {
-          ant.SetState(kGettingFood);
-        }
       }
-      colony.AdvanceOneFrame();
+
+      if (ant.GetState() == kGoingHome &&
+          IsAtLocation(ant.GetPosition(), colony.GetPosition(),
+                       colony.GetRadius())) {
+        ant.SetState(kGettingFood);
+      }
+
+      if (frame_count_ % 5 == 0) {
+        size_t pos_x = static_cast<size_t>(floor(ant.GetPosition().x)) / kAntSpeed;
+        size_t pos_y = static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
+        ant.AddMarker(&grid_[pos_x][pos_y]);
+      }
     }
+    colony.AdvanceOneFrame();
   }
+
+  if (frame_count_ == 100) {
+    frame_count_ = 0;
+  }
+  frame_count_++;
 }
 
 void World::GenerateGrid() {
-  size_t grid_width = static_cast<size_t>(ci::app::getWindowSize().x) / kAntSpeed;
-  size_t grid_height = static_cast<size_t>(ci::app::getWindowSize().y) / kAntSpeed;
+  size_t grid_width = kWindowWidth / kAntSpeed;
+  size_t grid_height = kWindowHeight / kAntSpeed;
 
   grid_.resize(grid_width + 1);
   for (size_t pos_x = 0; pos_x <= grid_width; ++pos_x) {
@@ -50,14 +66,21 @@ void World::GenerateColonies(const size_t num_colonies) {
   for (size_t i = 0; i < num_colonies; ++i) {
     size_t population = rand() % kMaxPopulation + 1;
 
-    colonies_.push_back(Colony(population, glm::vec2(960, 540), kColonyRadius)); // TODO: Randomize these parameters
+    colonies_.push_back(
+        Colony(population, glm::vec2(960, 540), kColonyRadius));  // TODO: Randomize these parameters
   }
 }
 
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
-    food_sources_.push_back(FoodSource(glm::vec2(1500, 800), 300)); // TODO: Randomize these parameters
+    food_sources_.push_back(FoodSource(
+        glm::vec2(1500, 800), 300));  // TODO: Randomize these parameters
   }
 }
 
+bool World::IsAtLocation(const glm::vec2& ant_position,
+                         const glm::vec2& location, const float radius) {
+  return glm::length(ant_position - location) <= radius;
 }
+
+}  // namespace antsim
