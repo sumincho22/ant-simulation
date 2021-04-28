@@ -130,8 +130,11 @@ const vec2& Ant::GetPosition() const {
 }
 
 void Ant::RenderFood() const {
+  glm::vec2 food_pos(position_.x + (width_ / 2.0f) * cos(direction_.GetAngle()),
+                     position_.y + (height_ / 2.0f) * sin(direction_.GetAngle()));
+
   ci::gl::color(ci::Color("green"));
-  ci::gl::drawSolidCircle(position_, 5);
+  ci::gl::drawSolidCircle(food_pos, 5);
   ci::gl::color(1,1,1);
 }
 

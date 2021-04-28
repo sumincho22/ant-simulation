@@ -26,10 +26,13 @@ void World::AdvanceOneFrame() {
                          food_source.GetRadius())) {
           ant.SetState(kGoingHome);
           ant.IncrementMarkers();
+
+          food_source.DecreaseQuantity();
+          food_source.UpdateSize();
         }
       }
 
-      // Going back home carrying the food
+      // Ant brought the food back to the colony
       if (ant.GetState() == kGoingHome &&
           IsAtLocation(ant.GetPosition(), colony.GetPosition(),
                        colony.GetRadius())) {
@@ -77,7 +80,7 @@ void World::GenerateColonies(const size_t num_colonies) {
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
     food_sources_.push_back(FoodSource(
-        glm::vec2(1500, 800), 300));  // TODO: Randomize these parameters
+        glm::vec2(1500, 800), 100));  // TODO: Randomize these parameters
   }
 }
 

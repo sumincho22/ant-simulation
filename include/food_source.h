@@ -18,7 +18,7 @@ class FoodSource {
   float GetQuantity() const;
 
  private:
-  const float kRadiusIncrement = 10;
+  const float kRadiusIncrement = 1;
 
   glm::vec2 position_;
   float radius_;

@@ -29,22 +29,13 @@ const float Direction::GetAngle() const {
 
 void Direction::TurnTowardsPoint(glm::vec2& velocity,
                                  const glm::vec2& pos_diff) {
-  float angle_magnitude = glm::abs(atan(pos_diff.y / pos_diff.x));
-
-  if (pos_diff.x < 0) {
-    angle_magnitude += static_cast<float>(M_PI);
+  if (pos_diff.x > 0) {
+    angle_ = atan(pos_diff.y / pos_diff.x);
+  } else {
+    angle_ = atan(pos_diff.y / pos_diff.x) - static_cast<float>(M_PI);
   }
 
-  if (pos_diff.y < 0) {
-    angle_magnitude *= -1;
-  }
-
-  angle_ = angle_magnitude;
-
-  velocity = speed_ * glm::vec2(cos(angle_), (pos_diff.x > 0 ? 1 : -1) * sin(angle_));
-
-  // TODO: temporary fix -- only fixes some angles
-  angle_ = atan(pos_diff.y / pos_diff.x) - static_cast<float>(M_PI);
+  velocity = speed_ * glm::vec2(cos(angle_), sin(angle_));
 }
 
 }  // namespace antsim
