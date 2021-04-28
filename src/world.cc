@@ -77,16 +77,28 @@ void World::GenerateColonies(const size_t num_colonies) {
   for (size_t i = 0; i < num_colonies; ++i) {
     size_t population = rand() % kMaxPopulation + 1;
 
+    float radius_offset = 2.0f * kColonyRadius;
+    float pos_x =
+        SimLogic::GetRandomValue(radius_offset, kWindowWidth - radius_offset);
+    float pos_y =
+        SimLogic::GetRandomValue(radius_offset, kWindowHeight - radius_offset);
+
     colonies_.push_back(
-        Colony(population, glm::vec2(960, 540),
-               kColonyRadius));  // TODO: Randomize these parameters
+        Colony(population, glm::vec2(pos_x, pos_y), kColonyRadius));
   }
 }
 
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
-    food_sources_.push_back(FoodSource(
-        glm::vec2(1500, 800), 100));  // TODO: Randomize these parameters
+    size_t quantity = rand() % kMinQuantity + kMinQuantity;
+
+    float radius_offset = 2.0f * static_cast<float>(quantity);
+    float pos_x =
+        SimLogic::GetRandomValue(radius_offset, kWindowWidth - radius_offset);
+    float pos_y =
+        SimLogic::GetRandomValue(radius_offset, kWindowHeight - radius_offset);
+
+    food_sources_.push_back(FoodSource(glm::vec2(pos_x, pos_y), quantity));
   }
 }
 

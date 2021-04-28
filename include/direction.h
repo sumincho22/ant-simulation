@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "cinder/gl/gl.h"
+#include "sim_logic.h"
 
 namespace antsim {
 
@@ -35,8 +36,6 @@ class Direction {
  private:
   float speed_;
   float angle_;
-
-  const float GetRandomValue(const float min_value, const float max_value) const;
 };
 
 }  // namespace antsim

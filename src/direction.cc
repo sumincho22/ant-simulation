@@ -8,19 +8,13 @@ Direction::Direction(const float speed, const float angle) {
 }
 
 void Direction::ApplyTurn(glm::vec2& velocity, float max_angle) {
-  float rotation = GetRandomValue(-max_angle, max_angle);
+  float rotation = SimLogic::GetRandomValue(-max_angle, max_angle);
   angle_ += rotation;
   velocity = speed_ * glm::vec2(cos(angle_), sin(angle_));
 }
 
 void Direction::TurnAround() {
   angle_ += static_cast<float>(M_PI);
-}
-
-const float Direction::GetRandomValue(const float min_value,
-                                      const float max_value) const {
-  return min_value + (static_cast<float>(rand()) /
-                      static_cast<float>(RAND_MAX) * (max_value - min_value));
 }
 
 const float Direction::GetAngle() const {
