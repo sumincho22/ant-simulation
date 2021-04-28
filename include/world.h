@@ -23,11 +23,11 @@ class World {
 
   std::vector<std::vector<MarkablePoint>> grid_;
   std::vector<Colony> colonies_;
-  // std::vector<FoodSource> food_sources_;
+  std::vector<FoodSource> food_sources_;
 
   void GenerateGrid();
   void GenerateColonies(const size_t num_colonies);
-  // void GenerateFoodSources(const size_t num_food_sources);
+  void GenerateFoodSources(const size_t num_food_sources);
 };
 
 }

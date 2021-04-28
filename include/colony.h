@@ -12,6 +12,10 @@ class Colony {
 
   void Render() const;
 
+  std::vector<Ant>& GetAnts();
+  const glm::vec2& GetPosition() const;
+  float GetRadius() const;
+
  private:
   const float kAntSpeed = 2;
 
@@ -21,8 +25,6 @@ class Colony {
   std::vector<Ant> ants_;
 
   void GenerateAnts(const size_t population);
-
-  bool IsAtColony(const Ant& ant);
 
   void RenderAnts() const;
 

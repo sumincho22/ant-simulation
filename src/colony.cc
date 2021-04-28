@@ -7,18 +7,16 @@ Colony::Colony(const size_t population, const glm::vec2& position, const float r
   radius_ = radius;
   GenerateAnts(population);
 }
-
 void Colony::AdvanceOneFrame() {
   for (Ant& ant : ants_) {
-    if (ant.GetState() == kGoingHome && IsAtColony(ant)) {
-      ant.SetState(kGettingFood);
-    }
     ant.AdvanceOneFrame();
   }
 }
 
 void Colony::Render() const {
+  ci::gl::color(ci::Color("purple"));
   ci::gl::drawSolidCircle(position_, radius_);
+  ci::gl::color(1,1,1);
   RenderAnts();
 }
 
@@ -34,14 +32,22 @@ void Colony::GenerateAnts(size_t population) {
   }
 }
 
-bool Colony::IsAtColony(const Ant& ant) {
-  return glm::length(ant.GetPosition() - position_) == radius_;
-}
-
 void Colony::RenderAnts() const {
   for (const Ant& ant : ants_) {
     ant.DrawModel();
   }
+}
+
+std::vector<Ant>& Colony::GetAnts() {
+  return ants_;
+}
+
+float Colony::GetRadius() const {
+  return radius_;
+}
+
+const glm::vec2& Colony::GetPosition() const {
+  return position_;
 }
 
 }

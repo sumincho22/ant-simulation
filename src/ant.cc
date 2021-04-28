@@ -66,6 +66,7 @@ void Ant::HandleMovement() {
     case kGettingFood:
       break;
     case kGoingHome:
+      Wander();
       break;
     default:
       break;
@@ -128,6 +129,7 @@ const vec2& Ant::GetPosition() const {
 void Ant::RenderFood() const {
   ci::gl::color(ci::Color("green"));
   ci::gl::drawSolidCircle(position_, 5);
+  ci::gl::color(1,1,1);
 }
 
 }  // namespace antsim

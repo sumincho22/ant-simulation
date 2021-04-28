@@ -5,17 +5,31 @@ namespace antsim {
 World::World() {
   GenerateGrid();
   GenerateColonies(1);
+  GenerateFoodSources(1);
 }
 
 void World::Render() const {
   for (const Colony& colony : colonies_) {
     colony.Render();
   }
+  for (const FoodSource& food_source : food_sources_) {
+    food_source.Render();
+  }
 }
 
 void World::AdvanceOneFrame() {
-  for (Colony& colony : colonies_) {
-    colony.AdvanceOneFrame();
+  for (FoodSource& food_source : food_sources_) {
+    for (Colony& colony : colonies_) {
+      for (Ant& ant : colony.GetAnts()) {
+        if (ant.GetState() != kGoingHome && glm::length(ant.GetPosition() - food_source.GetPosition()) <= food_source.GetRadius()) {
+          ant.SetState(kGoingHome);
+        }
+        if (ant.GetState() == kGoingHome && glm::length(ant.GetPosition() - colony.GetPosition()) <= colony.GetRadius()) {
+          ant.SetState(kGettingFood);
+        }
+      }
+      colony.AdvanceOneFrame();
+    }
   }
 }
 
@@ -36,11 +50,14 @@ void World::GenerateColonies(const size_t num_colonies) {
   for (size_t i = 0; i < num_colonies; ++i) {
     size_t population = rand() % kMaxPopulation + 1;
 
-    colonies_.push_back(Colony(population, ci::app::getWindowCenter(), kColonyRadius)); // TODO: Randomize these parameters
+    colonies_.push_back(Colony(population, glm::vec2(960, 540), kColonyRadius)); // TODO: Randomize these parameters
   }
 }
 
-//void World::GenerateFoodSources(const size_t num_food_sources) {
-//}
+void World::GenerateFoodSources(const size_t num_food_sources) {
+  for (size_t i = 0; i < num_food_sources; ++i) {
+    food_sources_.push_back(FoodSource(glm::vec2(1500, 800), 300)); // TODO: Randomize these parameters
+  }
+}
 
 }
