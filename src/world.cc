@@ -12,6 +12,7 @@ void World::Render() const {
   for (const Colony& colony : colonies_) {
     colony.Render();
   }
+
   for (const FoodSource& food_source : food_sources_) {
     food_source.Render();
   }
@@ -40,16 +41,20 @@ void World::AdvanceOneFrame() {
         ant.SetState(kGettingFood);
       }
 
-      if (ant.GetState() != kGoingHome && (frame_count_ == 0 || frame_count_ % 20 == 0)) {
-        size_t pos_x = static_cast<size_t>(floor(ant.GetPosition().x)) / kAntSpeed;
-        size_t pos_y = static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
+      if (ant.GetState() != kGoingHome &&
+          (frame_count_ == 0 || frame_count_ % 20 == 0)) {
+        size_t pos_x =
+            static_cast<size_t>(floor(ant.GetPosition().x)) / kAntSpeed;
+        size_t pos_y =
+            static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
         ant.AddMarker(&grid_[pos_x][pos_y]);
       }
     }
     colony.AdvanceOneFrame();
   }
 
-  if (frame_count_ == 100) {
+  // Maintaining minimal value to prevent overflow.
+  if (frame_count_ == kMaxFrames) {
     frame_count_ = 0;
   }
   frame_count_++;
@@ -73,7 +78,8 @@ void World::GenerateColonies(const size_t num_colonies) {
     size_t population = rand() % kMaxPopulation + 1;
 
     colonies_.push_back(
-        Colony(population, glm::vec2(960, 540), kColonyRadius));  // TODO: Randomize these parameters
+        Colony(population, glm::vec2(960, 540),
+               kColonyRadius));  // TODO: Randomize these parameters
   }
 }
 

@@ -2,26 +2,39 @@
 
 #include <cinder/app/AppBase.h>
 
-#include "markable_point.h"
 #include "colony.h"
 #include "food_source.h"
+#include "markable_point.h"
 
 namespace antsim {
 
+/**
+ * This class creates the world of the ant simulation, which includes colonies,
+ * food sources, and ants.
+ */
 class World {
  public:
-  World();
+  /**
+   * Creates the world in which colonies, food sources, and ants co-exist.
+   */
+  World(); // TODO: Add parameters later on.
+
   void Render() const;
   void AdvanceOneFrame();
 
  private:
-  const size_t kAntSpeed = 2;
+  // FIXME: setFullScreen() method should be called before.
   const size_t kWindowWidth = 1920;
   const size_t kWindowHeight = 1080;
 
-  // Constants for colony properties
+  // FIXME: The ant speed should be universal between different classes.
+  const size_t kAntSpeed = 2;
+
+  // Constant values for colony properties.
   const size_t kMaxPopulation = 100;
   const float kColonyRadius = 50;
+
+  const size_t kMaxFrames = 100;
 
   size_t frame_count_;
 
@@ -33,7 +46,9 @@ class World {
   void GenerateColonies(const size_t num_colonies);
   void GenerateFoodSources(const size_t num_food_sources);
 
-  bool IsAtLocation(const glm::vec2& ant_position, const glm::vec2& location, const float radius);
+  // FIXME: Parameters are little awkward.
+  bool IsAtLocation(const glm::vec2& ant_position, const glm::vec2& location,
+                    const float radius);
 };
 
-}
+}  // namespace antsim
