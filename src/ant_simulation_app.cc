@@ -7,7 +7,8 @@ AntSimApp::AntSimApp() : world_() {
 }
 
 void AntSimApp::draw() {
-  ci::gl::clear(ci::Color("black"));
+  ci::gl::clear(kBackgroundColor);
+
   world_.Render();
 }
 

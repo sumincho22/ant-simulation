@@ -1,15 +1,15 @@
 #pragma once
 
-#include "ant.h"
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+
 #include "world.h"
 
 namespace antsim {
 
 /**
- * An app for visualizing the behavior of ants.
+ * A visual app for simulating the behavior of ants.
  */
 class AntSimApp : public ci::app::App {
  public:
@@ -19,6 +19,8 @@ class AntSimApp : public ci::app::App {
   void update() override;
 
  private:
+  const ci::Color kBackgroundColor = ci::Color("black");
+
   World world_;
 };
 
