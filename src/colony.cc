@@ -2,7 +2,8 @@
 
 namespace antsim {
 
-Colony::Colony(const size_t population, const glm::vec2& position, const float radius) {
+Colony::Colony(const size_t population, const glm::vec2& position,
+               const float radius) {
   position_ = position;
   radius_ = radius;
   GenerateAnts(population);
@@ -48,4 +49,4 @@ const glm::vec2& Colony::GetPosition() const {
   return position_;
 }
 
-}
+}  // namespace antsim
