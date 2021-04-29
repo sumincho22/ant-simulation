@@ -161,6 +161,14 @@ const vec2& Ant::GetPosition() const {
   return position_;
 }
 
+float Ant::GetWidth() const {
+  return width_;
+}
+
+float Ant::GetHeight() const {
+  return height_;
+}
+
 void Ant::RenderFood() const {
   glm::vec2 food_pos(
       position_.x + (width_ / 2.0f) * cos(direction_.GetAngle()),

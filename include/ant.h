@@ -37,6 +37,8 @@ class Ant {
   const glm::vec2& GetPosition() const;
   State GetState() const;
   void SetState(State state);
+  float GetWidth() const;
+  float GetHeight() const;
 
  private:
   const float kModelScale = 0.03f;

@@ -24,7 +24,7 @@ void World::AdvanceOneFrame() {
       for (FoodSource& food_source : food_sources_) {
         if (ant.GetState() != kGoingHome &&
             IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
-                         food_source.GetRadius())) {
+                         food_source.GetRadius() + (ant.GetWidth() / 2.0f))) {
           ant.SetState(kGoingHome);
           ant.IncrementMarkers();
 
@@ -36,7 +36,7 @@ void World::AdvanceOneFrame() {
       // Ant brought the food back to the colony
       if (ant.GetState() == kGoingHome &&
           IsAtLocation(ant.GetPosition(), colony.GetPosition(),
-                       colony.GetRadius())) {
+                       colony.GetRadius() + (ant.GetWidth() / 2.0f))) {
         ant.ClearMarkers();
         ant.SetState(kGettingFood);
       }
@@ -90,10 +90,10 @@ void World::GenerateColonies(const size_t num_colonies) {
 
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
-    float quantity =
-        ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
+    float quantity = ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
 
-    float offset = quantity + kOffset; // FIXME: Quantity is not always equal to radius.
+    float offset =
+        quantity + kOffset;  // FIXME: Quantity is not always equal to radius.
     ci::Rand::randomize();
     float pos_x = ci::randFloat(offset, kWindowWidth - offset);
     ci::Rand::randomize();
@@ -104,8 +104,8 @@ void World::GenerateFoodSources(const size_t num_food_sources) {
 }
 
 bool World::IsAtLocation(const glm::vec2& ant_position,
-                         const glm::vec2& location, const float radius) {
-  return glm::length(ant_position - location) <= radius;
+                         const glm::vec2& location, const float distance) {
+  return glm::length(ant_position - location) <= distance;
 }
 
 }  // namespace antsim

@@ -53,7 +53,7 @@ class World {
 
   // FIXME: Parameters are little awkward.
   bool IsAtLocation(const glm::vec2& ant_position, const glm::vec2& location,
-                    const float radius);
+                    const float distance);
 };
 
 }  // namespace antsim
