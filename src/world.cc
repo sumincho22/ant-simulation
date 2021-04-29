@@ -14,7 +14,9 @@ void World::Render() const {
   }
 
   for (const FoodSource& food_source : food_sources_) {
-    food_source.Render();
+    if (food_source.GetQuantity() > 0) {
+      food_source.Render();
+    }
   }
 }
 
