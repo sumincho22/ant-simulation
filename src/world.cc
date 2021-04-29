@@ -4,8 +4,8 @@ namespace antsim {
 
 World::World() {
   GenerateGrid();
-  GenerateColonies(1);
-  GenerateFoodSources(1);
+  GenerateColonies(2);
+  GenerateFoodSources(3);
 }
 
 void World::Render() const {
@@ -75,13 +75,13 @@ void World::GenerateGrid() {
 
 void World::GenerateColonies(const size_t num_colonies) {
   for (size_t i = 0; i < num_colonies; ++i) {
-    size_t population = rand() % kMaxPopulation + 1;
+    size_t population = rand() % kMinPopulation + kMinPopulation;
 
-    float radius_offset = 2.0f * kColonyRadius;
-    float pos_x =
-        SimLogic::GetRandomValue(radius_offset, kWindowWidth - radius_offset);
-    float pos_y =
-        SimLogic::GetRandomValue(radius_offset, kWindowHeight - radius_offset);
+    float offset = kColonyRadius + kOffset;
+    ci::Rand::randomize();
+    float pos_x = ci::randFloat(offset, kWindowWidth - offset);
+    ci::Rand::randomize();
+    float pos_y = ci::randFloat(offset, kWindowHeight - offset);
 
     colonies_.push_back(
         Colony(population, glm::vec2(pos_x, pos_y), kColonyRadius));
@@ -90,13 +90,14 @@ void World::GenerateColonies(const size_t num_colonies) {
 
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
-    size_t quantity = rand() % kMinQuantity + kMinQuantity;
+    float quantity =
+        ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
 
-    float radius_offset = 2.0f * static_cast<float>(quantity);
-    float pos_x =
-        SimLogic::GetRandomValue(radius_offset, kWindowWidth - radius_offset);
-    float pos_y =
-        SimLogic::GetRandomValue(radius_offset, kWindowHeight - radius_offset);
+    float offset = quantity + kOffset; // FIXME: Quantity is not always equal to radius.
+    ci::Rand::randomize();
+    float pos_x = ci::randFloat(offset, kWindowWidth - offset);
+    ci::Rand::randomize();
+    float pos_y = ci::randFloat(offset, kWindowHeight - offset);
 
     food_sources_.push_back(FoodSource(glm::vec2(pos_x, pos_y), quantity));
   }

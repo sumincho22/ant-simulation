@@ -8,7 +8,7 @@ Direction::Direction(const float speed, const float angle) {
 }
 
 void Direction::ApplyTurn(glm::vec2& velocity, float max_angle) {
-  float rotation = SimLogic::GetRandomValue(-max_angle, max_angle);
+  float rotation = ci::randFloat(-max_angle, max_angle);
   angle_ += rotation;
   velocity = speed_ * glm::vec2(cos(angle_), sin(angle_));
 }

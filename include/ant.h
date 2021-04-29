@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cinder/app/AppBase.h>
 #include <cmath>
 
 #include "cinder/gl/gl.h"
+#include "cinder/Rand.h"
+
 #include "direction.h"
 #include "markable_point.h"
 #include "state.h"
@@ -10,22 +13,23 @@
 namespace antsim {
 
 /**
- * This class holds all the properties of an Ant.
+ * This class holds the properties and handles the path movements of an ant.
  */
 class Ant {
  public:
   /**
-   * Creates an Ant with the provided position and velocity.
+   * Creates an ant with the provided position, angle, and speed.
    *
-   * @param position the location of the Ant (the x- and y-coordinates)
-   * @param velocity the velocity of the Ant (in x- and y-velocities)
+   * @param position    the position of the ant
+   * @param angle       the angle the ant is facing
+   * @param speed       the speed of the ant
    */
   Ant(const glm::vec2& position, const float angle, const float speed);
 
   void AdvanceOneFrame();
-
   void DrawModel() const;
 
+  // Marker functions
   void AddMarker(MarkablePoint* marker);
   void IncrementMarkers();
   void ClearMarkers();
@@ -56,21 +60,22 @@ class Ant {
   glm::vec2 velocity_;
   Direction direction_;
   State state_;
+
   std::vector<MarkablePoint*> markable_points_;
 
-  void HandleMovement();
-  void CollideVertBound();
-  void CollideHorizBound();
-  void Wander();
-  void FollowMarkers();
+  void RenderFood() const;
 
   void UpdatePosition();
 
   void NegateXVel();
   void NegateYVel();
 
-  void RenderFood() const;
-
+  // Movement functions
+  void HandleMovement();
+  void CollideVertBound();
+  void CollideHorizBound();
+  void Wander();
+  void FollowMarkers();
   void MoveTowardsPoint(const glm::vec2& point);
 };
 

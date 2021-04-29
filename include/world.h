@@ -2,6 +2,7 @@
 
 #include <cinder/app/AppBase.h>
 
+#include "cinder/Rand.h"
 #include "colony.h"
 #include "food_source.h"
 #include "markable_point.h"
@@ -26,16 +27,17 @@ class World {
   // FIXME: setFullScreen() method should be called before.
   const size_t kWindowWidth = 1920;
   const size_t kWindowHeight = 1080;
+  const size_t kOffset = 50;
 
   // FIXME: The ant speed should be universal between different classes.
   const size_t kAntSpeed = 2;
 
   // Colony properties
-  const size_t kMaxPopulation = 100;
+  const size_t kMinPopulation = 100;
   const float kColonyRadius = 50;
 
   // Food source properties
-  const size_t kMinQuantity = 150;
+  const float kMaxQuantity = 100;
 
   const size_t kMaxFrames = 100;
 

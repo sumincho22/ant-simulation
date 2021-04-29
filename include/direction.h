@@ -3,7 +3,7 @@
 #include <cmath>
 
 #include "cinder/gl/gl.h"
-#include "sim_logic.h"
+#include "cinder/Rand.h"
 
 namespace antsim {
 

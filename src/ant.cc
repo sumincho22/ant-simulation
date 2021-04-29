@@ -1,12 +1,9 @@
 #include "ant.h"
 
-#include <cinder/app/AppBase.h>
-
 using ci::Color;
 using glm::vec2;
 
 namespace antsim {
-//
 float Ant::width_ = -1;
 float Ant::height_ = -1;
 
@@ -26,7 +23,7 @@ void Ant::AdvanceOneFrame() {
 }
 
 void Ant::DrawModel() const {
-  // loading
+  // Loading
   static ci::gl::Texture2dRef ant_model = ci::gl::Texture2d::create(ci::loadImage(
       R"(C:\Users\scycl\Desktop\Cinder\my-projects\final-project-sumincho22\assets\ant.png)"));
   if (width_ == -1 && height_ == -1) {
@@ -34,7 +31,7 @@ void Ant::DrawModel() const {
     height_ = kModelScale * static_cast<float>(ant_model->getHeight());
   }
 
-  // drawing
+  // Drawing
   ci::gl::pushModelMatrix();
   ci::gl::translate(position_);
   ci::gl::rotate(direction_.GetAngle());
@@ -66,7 +63,7 @@ void Ant::HandleMovement() {
       Wander();
       break;
     case kGettingFood:
-      Wander();
+      Wander();  // TODO: Need to implement.
       break;
     case kGoingHome:
       FollowMarkers();
@@ -76,13 +73,9 @@ void Ant::HandleMovement() {
   }
 }
 
-void Ant::UpdatePosition() {
-  position_ += velocity_;
-}
-
 void Ant::Wander() {
-  int big_turn_prob = rand() % (kBigChange - frame_count_) + frame_count_;
-  int small_turn_prob = rand() % kSmallChange + 1;
+  int big_turn_prob = ci::randInt(frame_count_, kBigChange);
+  int small_turn_prob = ci::randInt(1, kSmallChange);
 
   if (frame_count_ == big_turn_prob) {
     direction_.ApplyTurn(velocity_, kBigTurn);
@@ -97,12 +90,23 @@ void Ant::Wander() {
   UpdatePosition();
 }
 
-void Ant::NegateXVel() {
-  velocity_.x *= -1;
+void Ant::FollowMarkers() {
+  if (glm::length(2.0f * (markable_points_[point_index_]->position) -
+                  position_) <= width_) {
+    if (point_index_ == 0) {
+      MoveTowardsPoint(start_pos_);
+      return;
+    }
+    point_index_--;
+    markable_points_.pop_back();
+  }
+  MoveTowardsPoint(2.0f * (markable_points_[point_index_]->position));
 }
 
-void Ant::NegateYVel() {
-  velocity_.y *= -1;
+void Ant::MoveTowardsPoint(const glm::vec2& point) {
+  glm::vec2 pos_diff = point - position_;
+  direction_.TurnTowardsPoint(velocity_, pos_diff);
+  UpdatePosition();
 }
 
 void Ant::CollideVertBound() {
@@ -115,27 +119,6 @@ void Ant::CollideHorizBound() {
   NegateYVel();
   direction_.TurnAround();
   UpdatePosition();
-}
-
-State Ant::GetState() const {
-  return state_;
-}
-
-void Ant::SetState(State state) {
-  state_ = state;
-}
-
-const vec2& Ant::GetPosition() const {
-  return position_;
-}
-
-void Ant::RenderFood() const {
-  glm::vec2 food_pos(position_.x + (width_ / 2.0f) * cos(direction_.GetAngle()),
-                     position_.y + (height_ / 2.0f) * sin(direction_.GetAngle()));
-
-  ci::gl::color(ci::Color("green"));
-  ci::gl::drawSolidCircle(food_pos, 5);
-  ci::gl::color(1,1,1);
 }
 
 void Ant::AddMarker(MarkablePoint* marker) {
@@ -154,22 +137,38 @@ void Ant::ClearMarkers() {
   point_index_ = 0;
 }
 
-void Ant::FollowMarkers() {
-  if (glm::length(2.0f * (markable_points_[point_index_]->position) - position_) <= width_) {
-    if (point_index_ == 0) {
-      MoveTowardsPoint(start_pos_);
-      return;
-    }
-    point_index_--;
-    markable_points_.pop_back();
-  }
-  MoveTowardsPoint(2.0f * (markable_points_[point_index_]->position));
+void Ant::UpdatePosition() {
+  position_ += velocity_;
 }
 
-void Ant::MoveTowardsPoint(const glm::vec2& point) {
-  glm::vec2 pos_diff = point - position_;
-  direction_.TurnTowardsPoint(velocity_, pos_diff);
-  UpdatePosition();
+void Ant::NegateXVel() {
+  velocity_.x *= -1;
+}
+
+void Ant::NegateYVel() {
+  velocity_.y *= -1;
+}
+
+State Ant::GetState() const {
+  return state_;
+}
+
+void Ant::SetState(State state) {
+  state_ = state;
+}
+
+const vec2& Ant::GetPosition() const {
+  return position_;
+}
+
+void Ant::RenderFood() const {
+  glm::vec2 food_pos(
+      position_.x + (width_ / 2.0f) * cos(direction_.GetAngle()),
+      position_.y + (height_ / 2.0f) * sin(direction_.GetAngle()));
+
+  ci::gl::color(ci::Color("green"));
+  ci::gl::drawSolidCircle(food_pos, 5);
+  ci::gl::color(1, 1, 1);
 }
 
 }  // namespace antsim
