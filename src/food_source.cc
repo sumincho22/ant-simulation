@@ -9,7 +9,7 @@ FoodSource::FoodSource(const glm::vec2& position, const float quantity) {
 }
 
 void FoodSource::Render() const {
-  ci::gl::color(ci::Color("green"));
+  ci::gl::color(kColor);
   ci::gl::drawSolidCircle(position_, radius_);
 }
 
