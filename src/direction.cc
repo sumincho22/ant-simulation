@@ -13,14 +13,6 @@ void Direction::ApplyTurn(glm::vec2& velocity, float max_angle) {
   velocity = speed_ * glm::vec2(cos(angle_), sin(angle_));
 }
 
-void Direction::TurnAround() {
-  angle_ += static_cast<float>(M_PI);
-}
-
-const float Direction::GetAngle() const {
-  return angle_;
-}
-
 void Direction::TurnTowardsPoint(glm::vec2& velocity,
                                  const glm::vec2& pos_diff) {
   if (pos_diff.x > 0) {
@@ -30,6 +22,14 @@ void Direction::TurnTowardsPoint(glm::vec2& velocity,
   }
 
   velocity = speed_ * glm::vec2(cos(angle_), sin(angle_));
+}
+
+void Direction::TurnAround() {
+  angle_ += static_cast<float>(M_PI);
+}
+
+const float Direction::GetAngle() const {
+  return angle_;
 }
 
 }  // namespace antsim
