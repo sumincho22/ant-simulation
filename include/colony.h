@@ -27,6 +27,7 @@ class Colony {
   float GetRadius() const;
 
  private:
+  const ci::Color kColor = ci::Color("purple");
   const float kAntSpeed = 2;
 
   glm::vec2 position_;

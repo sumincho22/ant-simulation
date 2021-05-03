@@ -15,6 +15,7 @@ Ant::Ant(const glm::vec2& position, const float angle, const float speed)
   state_ = State::kWandering;
   frame_count_ = 0;
   point_index_ = 0;
+  markable_points_ = std::vector<MarkablePoint*>();
 }
 
 void Ant::AdvanceOneFrame() {
@@ -46,18 +47,6 @@ void Ant::DrawModel() const {
 }
 
 void Ant::HandleMovement() {
-  if ((position_.x + (width_ / 2.0f) >= ci::app::getWindowSize().x &&
-       velocity_.x > 0) ||
-      (position_.x - (width_ / 2.0f) < 0 && velocity_.x < 0)) {
-    CollideVertBound();
-    return;
-  } else if ((position_.y + (height_ / 2.0f) >= ci::app::getWindowSize().y &&
-              velocity_.y > 0) ||
-             (position_.y - (height_ / 2.0f) < 0 && velocity_.y < 0)) {
-    CollideHorizBound();
-    return;
-  }
-
   switch (state_) {
     case kWandering:
       Wander();
@@ -109,18 +98,6 @@ void Ant::MoveTowardsPoint(const glm::vec2& point) {
   UpdatePosition();
 }
 
-void Ant::CollideVertBound() {
-  NegateXVel();
-  direction_.TurnAround();
-  UpdatePosition();
-}
-
-void Ant::CollideHorizBound() {
-  NegateYVel();
-  direction_.TurnAround();
-  UpdatePosition();
-}
-
 void Ant::AddMarker(MarkablePoint* marker) {
   markable_points_.emplace_back(marker);
   point_index_ = markable_points_.size() - 1;
@@ -161,6 +138,10 @@ const vec2& Ant::GetPosition() const {
   return position_;
 }
 
+const vec2& Ant::GetVelocity() const {
+  return velocity_;
+}
+
 float Ant::GetWidth() const {
   return width_;
 }
@@ -169,12 +150,16 @@ float Ant::GetHeight() const {
   return height_;
 }
 
+Direction& Ant::GetDirection() {
+  return direction_;
+}
+
 void Ant::RenderFood() const {
   glm::vec2 food_pos(
       position_.x + (width_ / 2.0f) * cos(direction_.GetAngle()),
       position_.y + (height_ / 2.0f) * sin(direction_.GetAngle()));
 
-  ci::gl::color(ci::Color("green"));
+  ci::gl::color(kFoodColor);
   ci::gl::drawSolidCircle(food_pos, 5);
   ci::gl::color(1, 1, 1);
 }

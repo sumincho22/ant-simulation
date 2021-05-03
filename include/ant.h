@@ -34,13 +34,19 @@ class Ant {
   void IncrementMarkers();
   void ClearMarkers();
 
+  void NegateXVel();
+  void NegateYVel();
+
   const glm::vec2& GetPosition() const;
+  const glm::vec2& GetVelocity() const;
   State GetState() const;
   void SetState(State state);
   float GetWidth() const;
   float GetHeight() const;
+  Direction& GetDirection();
 
  private:
+  const ci::Color kFoodColor = ci::Color("green");
   const float kModelScale = 0.03f;
 
   // Constants for small and big turn probabilities
@@ -58,6 +64,8 @@ class Ant {
   size_t point_index_;
 
   glm::vec2 start_pos_;
+
+ private:
   glm::vec2 position_;
   glm::vec2 velocity_;
   Direction direction_;
@@ -69,13 +77,8 @@ class Ant {
 
   void UpdatePosition();
 
-  void NegateXVel();
-  void NegateYVel();
-
   // Movement functions
   void HandleMovement();
-  void CollideVertBound();
-  void CollideHorizBound();
   void Wander();
   void FollowMarkers();
   void MoveTowardsPoint(const glm::vec2& point);

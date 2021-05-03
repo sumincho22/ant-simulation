@@ -23,6 +23,8 @@ void World::Render() const {
 void World::AdvanceOneFrame() {
   for (Colony& colony : colonies_) {
     for (Ant& ant : colony.GetAnts()) {
+      HandleBoundCollisions(ant);
+
       for (FoodSource& food_source : food_sources_) {
         if (ant.GetState() != kGoingHome &&
             IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
@@ -108,6 +110,22 @@ void World::GenerateFoodSources(const size_t num_food_sources) {
 bool World::IsAtLocation(const glm::vec2& ant_position,
                          const glm::vec2& location, const float distance) {
   return glm::length(ant_position - location) <= distance;
+}
+
+void World::HandleBoundCollisions(Ant& ant) {
+  if ((ant.GetPosition().x + (ant.GetWidth() / 2.0f) >= kWindowWidth &&
+       ant.GetVelocity().x > 0) ||
+      (ant.GetPosition().x - (ant.GetWidth() / 2.0f) < 0 &&
+       ant.GetVelocity().x < 0)) {
+    ant.NegateXVel();
+    ant.GetDirection().TurnAround();
+  } else if ((ant.GetPosition().y + (ant.GetHeight() / 2.0f) >= kWindowHeight &&
+       ant.GetVelocity().y > 0) ||
+      (ant.GetPosition().y - (ant.GetHeight() / 2.0f) < 0 &&
+       ant.GetVelocity().y < 0)) {
+    ant.NegateYVel();
+    ant.GetDirection().TurnAround();
+  }
 }
 
 }  // namespace antsim

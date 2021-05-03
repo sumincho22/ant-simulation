@@ -6,6 +6,7 @@ Colony::Colony(const size_t population, const glm::vec2& position,
                const float radius) {
   position_ = position;
   radius_ = radius;
+
   GenerateAnts(population);
 }
 void Colony::AdvanceOneFrame() {
@@ -15,9 +16,10 @@ void Colony::AdvanceOneFrame() {
 }
 
 void Colony::Render() const {
-  ci::gl::color(ci::Color("purple"));
+  ci::gl::color(kColor);
   ci::gl::drawSolidCircle(position_, radius_);
 
+  // Reset color to properly render ant model
   ci::gl::color(1, 1, 1);
   RenderAnts();
 }

@@ -51,6 +51,8 @@ class World {
   void GenerateColonies(const size_t num_colonies);
   void GenerateFoodSources(const size_t num_food_sources);
 
+  void HandleBoundCollisions(Ant& ant);
+
   // FIXME: Parameters are little awkward.
   bool IsAtLocation(const glm::vec2& ant_position, const glm::vec2& location,
                     const float distance);
