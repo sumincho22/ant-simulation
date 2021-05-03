@@ -31,9 +31,11 @@ class World {
 
   // FIXME: The ant speed should be universal between different classes.
   const size_t kAntSpeed = 2;
+  const float kPathRange = 8.0f;
+  const float kVisionRange = static_cast<float>(M_PI) / 4.0f;
 
   // Colony properties
-  const size_t kMinPopulation = 100;
+  const size_t kMinPopulation = 50;
   const float kColonyRadius = 50;
 
   // Food source properties

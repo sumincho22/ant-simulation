@@ -41,8 +41,9 @@ void World::AdvanceOneFrame() {
       if (ant.GetState() == kGoingHome &&
           IsAtLocation(ant.GetPosition(), colony.GetPosition(),
                        colony.GetRadius() + (ant.GetWidth() / 2.0f))) {
-        ant.ClearMarkers();
         ant.SetState(kGettingFood);
+        ant.GetDirection().TurnAround();
+        ant.ClearMarkers();
       }
 
       if (ant.GetState() != kGoingHome &&
@@ -52,6 +53,42 @@ void World::AdvanceOneFrame() {
         size_t pos_y =
             static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
         ant.AddMarker(&grid_[pos_x][pos_y]);
+      }
+
+      if (ant.GetState() == kGettingFood) {  // pow(1.0f / dist, grid_[pos_x][pos_y].count)
+        size_t index = 0;
+        size_t best_count = 0;
+        glm::vec2 best_point(
+            ant.GetPosition().x +
+                (kPathRange * cos(ant.GetDirection().GetAngle())),
+            ant.GetPosition().y +
+                (kPathRange * sin(ant.GetDirection().GetAngle())));
+
+        if (frame_count_ % 20 == 0) {
+          while (index < 200) {
+            ci::Rand::randomize();
+            float rotation = ci::randFloat(-kVisionRange, kVisionRange);
+            float angle = ant.GetDirection().GetAngle() + rotation;
+
+            float pos_x = ant.GetPosition().x + (kPathRange * cos(angle));
+            float pos_y = ant.GetPosition().y + (kPathRange * sin(angle));
+            if ((pos_x >= ant.GetWidth() / 2.0f &&
+                pos_x <= kWindowWidth - (ant.GetWidth() / 2.0f)) &&
+                (pos_y >= ant.GetWidth() / 2.0f &&
+                    pos_y <= kWindowHeight - (ant.GetWidth() / 2.0f))) {
+              size_t x = static_cast<size_t>(floor(pos_x)) / kAntSpeed;
+              size_t y = static_cast<size_t>(floor(pos_y)) / kAntSpeed;
+
+              if (grid_[x][y].count >= best_count) {
+                best_count = grid_[x][y].count;
+                best_point = glm::vec2(pos_x, pos_y);
+              }
+            }
+
+            index++;
+          }
+        }
+        ant.SetPoint(best_point);
       }
     }
     colony.AdvanceOneFrame();
@@ -72,7 +109,8 @@ void World::GenerateGrid() {
   for (size_t pos_x = 0; pos_x <= grid_width; ++pos_x) {
     grid_[pos_x].resize(grid_height + 1);
     for (size_t pos_y = 0; pos_y <= grid_height; ++pos_y) {
-      grid_[pos_x][pos_y].position = glm::vec2(pos_x, pos_y);
+      grid_[pos_x][pos_y].position =
+          glm::vec2(kAntSpeed * pos_x, kAntSpeed * pos_y);
     }
   }
 }
@@ -107,11 +145,6 @@ void World::GenerateFoodSources(const size_t num_food_sources) {
   }
 }
 
-bool World::IsAtLocation(const glm::vec2& ant_position,
-                         const glm::vec2& location, const float distance) {
-  return glm::length(ant_position - location) <= distance;
-}
-
 void World::HandleBoundCollisions(Ant& ant) {
   if ((ant.GetPosition().x + (ant.GetWidth() / 2.0f) >= kWindowWidth &&
        ant.GetVelocity().x > 0) ||
@@ -120,12 +153,17 @@ void World::HandleBoundCollisions(Ant& ant) {
     ant.NegateXVel();
     ant.GetDirection().TurnAround();
   } else if ((ant.GetPosition().y + (ant.GetHeight() / 2.0f) >= kWindowHeight &&
-       ant.GetVelocity().y > 0) ||
-      (ant.GetPosition().y - (ant.GetHeight() / 2.0f) < 0 &&
-       ant.GetVelocity().y < 0)) {
+              ant.GetVelocity().y > 0) ||
+             (ant.GetPosition().y - (ant.GetHeight() / 2.0f) < 0 &&
+              ant.GetVelocity().y < 0)) {
     ant.NegateYVel();
     ant.GetDirection().TurnAround();
   }
+}
+
+bool World::IsAtLocation(const glm::vec2& ant_position,
+                         const glm::vec2& location, const float distance) {
+  return glm::length(ant_position - location) <= distance;
 }
 
 }  // namespace antsim

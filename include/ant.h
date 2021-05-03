@@ -44,6 +44,7 @@ class Ant {
   float GetWidth() const;
   float GetHeight() const;
   Direction& GetDirection();
+  void SetPoint(const glm::vec2& point);
 
  private:
   const ci::Color kFoodColor = ci::Color("green");
@@ -70,6 +71,7 @@ class Ant {
   glm::vec2 velocity_;
   Direction direction_;
   State state_;
+  glm::vec2 point_;
 
   std::vector<MarkablePoint*> markable_points_;
 
