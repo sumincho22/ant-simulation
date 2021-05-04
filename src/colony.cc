@@ -16,12 +16,12 @@ void Colony::AdvanceOneFrame() {
 }
 
 void Colony::Render() const {
-  ci::gl::color(kColor);
-  ci::gl::drawSolidCircle(position_, radius_);
-
   // Reset color to properly render ant model
   ci::gl::color(1, 1, 1);
   RenderAnts();
+
+  ci::gl::color(kColor);
+  ci::gl::drawSolidCircle(position_, radius_);
 }
 
 void Colony::GenerateAnts(size_t population) {

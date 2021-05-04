@@ -3,9 +3,12 @@
 namespace antsim {
 
 World::World() {
+  frame_count_ = 0;
+  food_markers_ = std::vector<MarkablePoint*>();
+
   GenerateGrid();
-  GenerateColonies(2);
-  GenerateFoodSources(3);
+  GenerateColonies(1);
+  GenerateFoodSources(1);
 }
 
 void World::Render() const {
@@ -25,12 +28,24 @@ void World::AdvanceOneFrame() {
     for (Ant& ant : colony.GetAnts()) {
       HandleBoundCollisions(ant);
 
+      size_t pos_x =
+          static_cast<size_t>(ceil(ant.GetPosition().x)) / kAntSpeed;
+      size_t pos_y =
+          static_cast<size_t>(ceil(ant.GetPosition().y)) / kAntSpeed;
+
       for (FoodSource& food_source : food_sources_) {
+        // Ant found food source
         if (ant.GetState() != kGoingHome &&
             IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
-                         food_source.GetRadius() + (ant.GetWidth() / 2.0f))) {
+                         food_source.GetRadius())) {
+          ant.AddMarker(&grid_[(size_t) food_source.GetPosition().x / 2]
+                              [(size_t) food_source.GetPosition().y / 2]);
           ant.SetState(kGoingHome);
           ant.IncrementMarkers();
+
+          if (food_markers_.empty()) {
+            food_markers_ = ant.GetMarkers();
+          }
 
           food_source.DecreaseQuantity();
           food_source.UpdateSize();
@@ -40,55 +55,22 @@ void World::AdvanceOneFrame() {
       // Ant brought the food back to the colony
       if (ant.GetState() == kGoingHome &&
           IsAtLocation(ant.GetPosition(), colony.GetPosition(),
-                       colony.GetRadius() + (ant.GetWidth() / 2.0f))) {
+                       colony.GetRadius())) {
         ant.SetState(kGettingFood);
         ant.GetDirection().TurnAround();
         ant.ClearMarkers();
-      }
-
-      if (ant.GetState() != kGoingHome &&
-          (frame_count_ == 0 || frame_count_ % 20 == 0)) {
-        size_t pos_x =
-            static_cast<size_t>(floor(ant.GetPosition().x)) / kAntSpeed;
-        size_t pos_y =
-            static_cast<size_t>(floor(ant.GetPosition().y)) / kAntSpeed;
         ant.AddMarker(&grid_[pos_x][pos_y]);
       }
 
-      if (ant.GetState() == kGettingFood) {  // pow(1.0f / dist, grid_[pos_x][pos_y].count)
-        size_t index = 0;
-        size_t best_count = 0;
-        glm::vec2 best_point(
-            ant.GetPosition().x +
-                (kPathRange * cos(ant.GetDirection().GetAngle())),
-            ant.GetPosition().y +
-                (kPathRange * sin(ant.GetDirection().GetAngle())));
+      // Adding markers
+      if (ant.GetState() != kGoingHome &&
+          (frame_count_ == 0 || frame_count_ % 10 == 0)) {
+        ant.AddMarker(&grid_[pos_x][pos_y]);
+      }
 
-        if (frame_count_ % 20 == 0) {
-          while (index < 200) {
-            ci::Rand::randomize();
-            float rotation = ci::randFloat(-kVisionRange, kVisionRange);
-            float angle = ant.GetDirection().GetAngle() + rotation;
-
-            float pos_x = ant.GetPosition().x + (kPathRange * cos(angle));
-            float pos_y = ant.GetPosition().y + (kPathRange * sin(angle));
-            if ((pos_x >= ant.GetWidth() / 2.0f &&
-                pos_x <= kWindowWidth - (ant.GetWidth() / 2.0f)) &&
-                (pos_y >= ant.GetWidth() / 2.0f &&
-                    pos_y <= kWindowHeight - (ant.GetWidth() / 2.0f))) {
-              size_t x = static_cast<size_t>(floor(pos_x)) / kAntSpeed;
-              size_t y = static_cast<size_t>(floor(pos_y)) / kAntSpeed;
-
-              if (grid_[x][y].count >= best_count) {
-                best_count = grid_[x][y].count;
-                best_point = glm::vec2(pos_x, pos_y);
-              }
-            }
-
-            index++;
-          }
-        }
-        ant.SetPoint(best_point);
+      // Ant going back to get food
+      if (ant.GetState() == kGettingFood) {
+        ant.SetMarkers(food_markers_);
       }
     }
     colony.AdvanceOneFrame();
@@ -133,30 +115,45 @@ void World::GenerateColonies(const size_t num_colonies) {
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
     float quantity = ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
+    float offset = quantity + kOffset;  // FIXME: Quantity is not always equal to radius.
 
-    float offset =
-        quantity + kOffset;  // FIXME: Quantity is not always equal to radius.
     ci::Rand::randomize();
-    float pos_x = ci::randFloat(offset, kWindowWidth - offset);
-    ci::Rand::randomize();
-    float pos_y = ci::randFloat(offset, kWindowHeight - offset);
+    glm::vec2 position(ci::randFloat(offset, kWindowWidth - offset),
+                       ci::randFloat(offset, kWindowHeight - offset));
 
-    food_sources_.push_back(FoodSource(glm::vec2(pos_x, pos_y), quantity));
+    for (const Colony& colony : colonies_) {
+      while (glm::length(colony.GetPosition() - position) <=
+             colony.GetRadius() + quantity) {
+        ci::Rand::randomize();
+        position = glm::vec2(ci::randFloat(offset, kWindowWidth - offset),
+                             ci::randFloat(offset, kWindowHeight - offset));
+      }
+    }
+
+    food_sources_.push_back(FoodSource(position, quantity));
   }
 }
 
 void World::HandleBoundCollisions(Ant& ant) {
+  bool is_collision = false;
+
   if ((ant.GetPosition().x + (ant.GetWidth() / 2.0f) >= kWindowWidth &&
        ant.GetVelocity().x > 0) ||
       (ant.GetPosition().x - (ant.GetWidth() / 2.0f) < 0 &&
        ant.GetVelocity().x < 0)) {
     ant.NegateXVel();
-    ant.GetDirection().TurnAround();
-  } else if ((ant.GetPosition().y + (ant.GetHeight() / 2.0f) >= kWindowHeight &&
+    is_collision = true;
+  }
+
+  if ((ant.GetPosition().y + (ant.GetWidth() / 2.0f) >= kWindowHeight &&
               ant.GetVelocity().y > 0) ||
-             (ant.GetPosition().y - (ant.GetHeight() / 2.0f) < 0 &&
+             (ant.GetPosition().y - (ant.GetWidth() / 2.0f) < 0 &&
               ant.GetVelocity().y < 0)) {
     ant.NegateYVel();
+    is_collision = true;
+  }
+
+  if (is_collision) {
     ant.GetDirection().TurnAround();
   }
 }

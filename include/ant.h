@@ -44,7 +44,8 @@ class Ant {
   float GetWidth() const;
   float GetHeight() const;
   Direction& GetDirection();
-  void SetPoint(const glm::vec2& point);
+  const std::vector<MarkablePoint*>& GetMarkers() const;
+  void SetMarkers(const std::vector<MarkablePoint*>& food_markers);
 
  private:
   const ci::Color kFoodColor = ci::Color("green");
@@ -61,19 +62,17 @@ class Ant {
   static float width_;
   static float height_;
 
-  size_t frame_count_;
-  size_t point_index_;
-
-  glm::vec2 start_pos_;
-
- private:
   glm::vec2 position_;
   glm::vec2 velocity_;
   Direction direction_;
   State state_;
-  glm::vec2 point_;
+
+  size_t frame_count_;
+  size_t point_index_;
+  size_t food_marker_index_;
 
   std::vector<MarkablePoint*> markable_points_;
+  std::vector<MarkablePoint*> food_markers_;
 
   void RenderFood() const;
 
@@ -83,6 +82,7 @@ class Ant {
   void HandleMovement();
   void Wander();
   void FollowMarkers();
+  void FollowFoodMarkers();
   void MoveTowardsPoint(const glm::vec2& point);
 };
 

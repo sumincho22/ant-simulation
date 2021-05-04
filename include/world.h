@@ -32,7 +32,7 @@ class World {
   // FIXME: The ant speed should be universal between different classes.
   const size_t kAntSpeed = 2;
   const float kPathRange = 8.0f;
-  const float kVisionRange = static_cast<float>(M_PI) / 4.0f;
+  const float kVisionRange = static_cast<float>(M_PI) / 2.0f;
 
   // Colony properties
   const size_t kMinPopulation = 50;
@@ -46,6 +46,7 @@ class World {
   size_t frame_count_;
 
   std::vector<std::vector<MarkablePoint>> grid_;
+  std::vector<MarkablePoint*> food_markers_;
   std::vector<Colony> colonies_;
   std::vector<FoodSource> food_sources_;
 
