@@ -58,7 +58,7 @@ void Ant::HandleMovement() {
       FollowHomeMarkers();
       break;
     case kGettingFood:
-      FollowFoodMarkers(); // TODO: Need to implement.
+      FollowFoodMarkers();
       break;
     default:
       break;
@@ -72,7 +72,7 @@ void Ant::Wander() {
   if (frame_count_ == big_turn_prob) {
     direction_.ApplyTurn(velocity_, kBigTurn);
 
-    // reset the frame count so its value does not get too big
+    // Reset the frame count so its value does not get too large
     frame_count_ = 0;
 
   } else if (frame_count_ % small_turn_prob == 0) {

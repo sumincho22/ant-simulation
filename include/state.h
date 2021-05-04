@@ -1,5 +1,7 @@
 #pragma once
 
+namespace antsim {
+
 /**
  * This enum class describes the current state of the ant.
  */
@@ -8,3 +10,5 @@ enum State {
   kGoingHome,
   kGettingFood
 };
+
+}  // namespace antsim

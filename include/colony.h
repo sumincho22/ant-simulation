@@ -16,8 +16,8 @@ class Colony {
    * @param position    the position of the colony
    * @param radius      the radius of the colony circle
    */
-  Colony(const size_t population, const glm::vec2& position,
-         const float radius);
+  Colony(const size_t population,
+         const glm::vec2& position, const float radius);
 
   void AdvanceOneFrame();
   void Render() const;
@@ -32,11 +32,9 @@ class Colony {
 
   glm::vec2 position_;
   float radius_;
-
   std::vector<Ant> ants_;
 
   void GenerateAnts(const size_t population);
-
   void RenderAnts() const;
 };
 
