@@ -30,9 +30,10 @@ class Ant {
   void DrawModel() const;
 
   // Marker functions
-  void AddMarker(MarkablePoint* marker);
+  void AddHomeMarker(MarkablePoint* marker);
   void IncrementMarkers();
-  void ClearMarkers();
+  void ClearHomeMarkers();
+  void ClearFoodMarkers();
 
   void NegateXVel();
   void NegateYVel();
@@ -44,7 +45,7 @@ class Ant {
   float GetWidth() const;
   float GetHeight() const;
   Direction& GetDirection();
-  const std::vector<MarkablePoint*>& GetMarkers() const;
+  const std::vector<MarkablePoint*>& GetHomeMarkers() const;
   void SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers);
 
  private:
@@ -68,10 +69,10 @@ class Ant {
   State state_;
 
   size_t frame_count_;
-  size_t point_index_;
+  size_t home_marker_index_;
   size_t food_marker_index_;
 
-  std::vector<MarkablePoint*> markable_points_;
+  std::vector<MarkablePoint*> home_markers_;
   std::vector<MarkablePoint*> food_markers_;
 
   void RenderFood() const;
@@ -81,7 +82,7 @@ class Ant {
   // Movement functions
   void HandleMovement();
   void Wander();
-  void FollowMarkers();
+  void FollowHomeMarkers();
   void FollowFoodMarkers();
   void MoveTowardsPoint(const glm::vec2& point);
 };

@@ -29,19 +29,22 @@ void World::AdvanceOneFrame() {
   for (Colony& colony : colonies_) {
     for (Ant& ant : colony.GetAnts()) {
       for (FoodSource& food_source : food_sources_) {
-        if (food_source.GetQuantity() == 0 && ant.GetState() == kGettingFood) {
+        if (food_source.GetQuantity() <= 0 && ant.GetState() == kGettingFood) {
           food_markers_.clear();
+          ant.ClearFoodMarkers();
           ant.SetState(kWandering);
         } else if (ant.GetState() != kGoingHome &&
-            IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
-                         food_source.GetRadius())) {
-          ant.AddMarker(&grid_[(size_t) food_source.GetPosition().x / 2]
-                              [(size_t) food_source.GetPosition().y / 2]);
+                   IsAtLocation(ant.GetPosition(),
+                                food_source.GetPosition(),
+                                food_source.GetRadius())) {
+          ant.AddHomeMarker(&grid_
+                            [(size_t) food_source.GetPosition().x / sim_speed_]
+                            [(size_t) food_source.GetPosition().y / sim_speed_]);
           ant.SetState(kGoingHome);
           ant.IncrementMarkers();
 
           if (food_markers_.empty()) {
-            food_markers_ = ant.GetMarkers();
+            food_markers_ = ant.GetHomeMarkers();
           }
 
           food_source.DecreaseQuantity();
@@ -49,32 +52,33 @@ void World::AdvanceOneFrame() {
         }
       }
 
-      size_t pos_x =
-          static_cast<size_t>(ceil(ant.GetPosition().x)) / sim_speed_;
-      size_t pos_y =
-          static_cast<size_t>(ceil(ant.GetPosition().y)) / sim_speed_;
-
       HandleBoundCollisions(ant);
 
-      // Ant brought the food back to the colony
-      if (ant.GetState() == kGoingHome &&
-          IsAtLocation(ant.GetPosition(), colony.GetPosition(),
-                       colony.GetRadius())) {
-        ant.SetState(kGettingFood);
-        ant.GetDirection().TurnAround();
-        ant.ClearMarkers();
-        ant.AddMarker(&grid_[pos_x][pos_y]);
-      }
+      size_t pos_x =
+          static_cast<size_t>(ant.GetPosition().x) / sim_speed_;
+      size_t pos_y =
+          static_cast<size_t>(ant.GetPosition().y) / sim_speed_;
 
       // Adding markers
       if (ant.GetState() != kGoingHome &&
           (frame_count_ == 0 || frame_count_ % 10 == 0)) {
-        ant.AddMarker(&grid_[pos_x][pos_y]);
+        ant.AddHomeMarker(&grid_[pos_x][pos_y]);
       }
 
-      // Ant going back to get food
-      if (ant.GetState() == kGettingFood) {
-        ant.SetFoodMarkers(food_markers_);
+      // Ant returns to the colony with food.
+      if (ant.GetState() == kGoingHome && IsAtLocation(ant.GetPosition(),
+                                                       colony.GetPosition(),
+                                                       colony.GetRadius())) {
+        ant.ClearHomeMarkers();
+        ant.ClearFoodMarkers();
+        ant.AddHomeMarker(&grid_[pos_x][pos_y]);
+
+        if (!food_markers_.empty()) {
+          ant.SetState(kGettingFood);
+          ant.SetFoodMarkers(food_markers_);
+        } else {
+          ant.SetState(kWandering);
+        }
       }
     }
     colony.AdvanceOneFrame();
@@ -118,10 +122,10 @@ void World::GenerateColonies(const size_t num_colonies) {
 
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
-    float quantity = ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
+    size_t quantity = ci::Rand::randInt(kMaxQuantity / 2, kMaxQuantity);
 
     // NOTE: Quantity is not always equal to radius.
-    float offset = quantity + kMargin;
+    float offset = static_cast<float>(quantity) + kMargin;
 
     ci::Rand::randomize();
     glm::vec2 position(ci::randFloat(offset, kWindowWidth - offset),

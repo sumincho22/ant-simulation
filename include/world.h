@@ -39,7 +39,7 @@ class World {
   // Colony & food source properties
   const size_t kMinPopulation = 50;
   const float kColonyRadius = 50;
-  const float kMaxQuantity = 200;
+  const size_t kMaxQuantity = 200;
 
   size_t frame_count_;
   size_t sim_speed_;

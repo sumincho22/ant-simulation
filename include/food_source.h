@@ -15,7 +15,7 @@ class FoodSource {
    * @param position    the position of the food source
    * @param quantity    the quantity of the food source
    */
-  FoodSource(const glm::vec2& position, const float quantity);
+  FoodSource(const glm::vec2& position, const size_t quantity);
 
   void Render() const;
 

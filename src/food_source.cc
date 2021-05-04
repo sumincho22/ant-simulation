@@ -2,9 +2,9 @@
 
 namespace antsim {
 
-FoodSource::FoodSource(const glm::vec2& position, const float quantity) {
+FoodSource::FoodSource(const glm::vec2& position, const size_t quantity) {
   position_ = position;
-  quantity_ = quantity;
+  quantity_ = static_cast<float>(quantity);
   radius_ = quantity / kRadiusIncrement;
 }
 
@@ -18,7 +18,9 @@ void FoodSource::UpdateSize() {
 }
 
 void FoodSource::DecreaseQuantity() {
-  quantity_--;
+  if (quantity_ > 0) {
+    quantity_--;
+  }
 }
 
 const glm::vec2& FoodSource::GetPosition() const {

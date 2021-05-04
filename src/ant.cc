@@ -12,9 +12,13 @@ Ant::Ant(const glm::vec2& position, const float angle, const float speed)
   position_ = position;
   velocity_ = vec2();
   state_ = State::kWandering;
+
   frame_count_ = 0;
-  point_index_ = 0;
-  markable_points_ = std::vector<MarkablePoint*>();
+  home_marker_index_ = 0;
+  food_marker_index_ = 0;
+
+  home_markers_ = std::vector<MarkablePoint*>();
+  food_markers_ = std::vector<MarkablePoint*>();
 }
 
 void Ant::AdvanceOneFrame() {
@@ -51,7 +55,7 @@ void Ant::HandleMovement() {
       Wander();
       break;
     case kGoingHome:
-      FollowMarkers();
+      FollowHomeMarkers();
       break;
     case kGettingFood:
       FollowFoodMarkers(); // TODO: Need to implement.
@@ -78,14 +82,14 @@ void Ant::Wander() {
   UpdatePosition();
 }
 
-void Ant::FollowMarkers() {
-  if (glm::length(markable_points_[point_index_]->position - position_)
+void Ant::FollowHomeMarkers() {
+  if (glm::length(home_markers_[home_marker_index_]->position - position_)
       <= width_) {
-    if (point_index_ > 0) {
-      point_index_--;
+    if (home_marker_index_ > 0) {
+      home_marker_index_--;
     }
   }
-  MoveTowardsPoint(markable_points_[point_index_]->position);
+  MoveTowardsPoint(home_markers_[home_marker_index_]->position);
 }
 
 void Ant::FollowFoodMarkers() {
@@ -104,20 +108,33 @@ void Ant::MoveTowardsPoint(const glm::vec2& point) {
   UpdatePosition();
 }
 
-void Ant::AddMarker(MarkablePoint* marker) {
-  markable_points_.emplace_back(marker);
-  point_index_ = markable_points_.size() - 1;
+void Ant::AddHomeMarker(MarkablePoint* marker) {
+  home_markers_.emplace_back(marker);
+  home_marker_index_ = home_markers_.size() - 1;
 }
 
 void Ant::IncrementMarkers() {
-  for (MarkablePoint* marker : markable_points_) {
+  for (MarkablePoint* marker : home_markers_) {
     marker->count++;
   }
 }
 
-void Ant::ClearMarkers() {
-  markable_points_.clear();
-  point_index_ = 0;
+void Ant::ClearHomeMarkers() {
+  home_markers_.clear();
+  home_marker_index_ = 0;
+}
+
+void Ant:: ClearFoodMarkers() {
+  food_markers_.clear();
+  food_marker_index_ = 0;
+}
+
+const std::vector<MarkablePoint*>& Ant::GetHomeMarkers() const {
+  return home_markers_;
+}
+
+void Ant::SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers) {
+  food_markers_ = food_markers;
   food_marker_index_ = 0;
 }
 
@@ -169,14 +186,6 @@ void Ant::RenderFood() const {
   ci::gl::color(kFoodColor);
   ci::gl::drawSolidCircle(food_pos, 5);
   ci::gl::color(1, 1, 1);
-}
-
-const std::vector<MarkablePoint*>& Ant::GetMarkers() const {
-  return markable_points_;
-}
-
-void Ant::SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers) {
-  food_markers_ = food_markers;
 }
 
 }  // namespace antsim
