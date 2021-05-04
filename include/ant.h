@@ -45,15 +45,15 @@ class Ant {
   float GetHeight() const;
   Direction& GetDirection();
   const std::vector<MarkablePoint*>& GetMarkers() const;
-  void SetMarkers(const std::vector<MarkablePoint*>& food_markers);
+  void SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers);
 
  private:
   const ci::Color kFoodColor = ci::Color("green");
   const float kModelScale = 0.03f;
 
   // Constants for small and big turn probabilities
-  const size_t kSmallChange = 10;
-  const size_t kBigChange = 200;
+  const size_t kSmallChange = 20;
+  const size_t kBigChange = 400;
 
   // Angle rotation increments for small and big turns
   const float kSmallTurn = static_cast<float>(M_PI) / 8;

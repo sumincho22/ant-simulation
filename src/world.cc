@@ -2,13 +2,15 @@
 
 namespace antsim {
 
-World::World() {
+World::World(const size_t sim_speed,
+             const size_t num_colonies, const size_t num_food_sources) {
   frame_count_ = 0;
+  sim_speed_ = sim_speed;
   food_markers_ = std::vector<MarkablePoint*>();
 
   GenerateGrid();
-  GenerateColonies(1);
-  GenerateFoodSources(1);
+  GenerateColonies(num_colonies);
+  GenerateFoodSources(num_food_sources);
 }
 
 void World::Render() const {
@@ -26,16 +28,11 @@ void World::Render() const {
 void World::AdvanceOneFrame() {
   for (Colony& colony : colonies_) {
     for (Ant& ant : colony.GetAnts()) {
-      HandleBoundCollisions(ant);
-
-      size_t pos_x =
-          static_cast<size_t>(ceil(ant.GetPosition().x)) / kAntSpeed;
-      size_t pos_y =
-          static_cast<size_t>(ceil(ant.GetPosition().y)) / kAntSpeed;
-
       for (FoodSource& food_source : food_sources_) {
-        // Ant found food source
-        if (ant.GetState() != kGoingHome &&
+        if (food_source.GetQuantity() == 0 && ant.GetState() == kGettingFood) {
+          food_markers_.clear();
+          ant.SetState(kWandering);
+        } else if (ant.GetState() != kGoingHome &&
             IsAtLocation(ant.GetPosition(), food_source.GetPosition(),
                          food_source.GetRadius())) {
           ant.AddMarker(&grid_[(size_t) food_source.GetPosition().x / 2]
@@ -51,6 +48,13 @@ void World::AdvanceOneFrame() {
           food_source.UpdateSize();
         }
       }
+
+      size_t pos_x =
+          static_cast<size_t>(ceil(ant.GetPosition().x)) / sim_speed_;
+      size_t pos_y =
+          static_cast<size_t>(ceil(ant.GetPosition().y)) / sim_speed_;
+
+      HandleBoundCollisions(ant);
 
       // Ant brought the food back to the colony
       if (ant.GetState() == kGoingHome &&
@@ -70,7 +74,7 @@ void World::AdvanceOneFrame() {
 
       // Ant going back to get food
       if (ant.GetState() == kGettingFood) {
-        ant.SetMarkers(food_markers_);
+        ant.SetFoodMarkers(food_markers_);
       }
     }
     colony.AdvanceOneFrame();
@@ -84,15 +88,15 @@ void World::AdvanceOneFrame() {
 }
 
 void World::GenerateGrid() {
-  size_t grid_width = kWindowWidth / kAntSpeed;
-  size_t grid_height = kWindowHeight / kAntSpeed;
+  size_t grid_width = kWindowWidth / sim_speed_;
+  size_t grid_height = kWindowHeight / sim_speed_;
 
   grid_.resize(grid_width + 1);
   for (size_t pos_x = 0; pos_x <= grid_width; ++pos_x) {
     grid_[pos_x].resize(grid_height + 1);
     for (size_t pos_y = 0; pos_y <= grid_height; ++pos_y) {
       grid_[pos_x][pos_y].position =
-          glm::vec2(kAntSpeed * pos_x, kAntSpeed * pos_y);
+          glm::vec2(sim_speed_ * pos_x, sim_speed_ * pos_y);
     }
   }
 }
@@ -100,8 +104,8 @@ void World::GenerateGrid() {
 void World::GenerateColonies(const size_t num_colonies) {
   for (size_t i = 0; i < num_colonies; ++i) {
     size_t population = rand() % kMinPopulation + kMinPopulation;
+    float offset = kColonyRadius + kMargin;
 
-    float offset = kColonyRadius + kOffset;
     ci::Rand::randomize();
     float pos_x = ci::randFloat(offset, kWindowWidth - offset);
     ci::Rand::randomize();
@@ -115,12 +119,15 @@ void World::GenerateColonies(const size_t num_colonies) {
 void World::GenerateFoodSources(const size_t num_food_sources) {
   for (size_t i = 0; i < num_food_sources; ++i) {
     float quantity = ci::Rand::randFloat(kMaxQuantity / 2.0f, kMaxQuantity);
-    float offset = quantity + kOffset;  // FIXME: Quantity is not always equal to radius.
+
+    // NOTE: Quantity is not always equal to radius.
+    float offset = quantity + kMargin;
 
     ci::Rand::randomize();
     glm::vec2 position(ci::randFloat(offset, kWindowWidth - offset),
                        ci::randFloat(offset, kWindowHeight - offset));
 
+    // Compare food source location to other colonies' locations.
     for (const Colony& colony : colonies_) {
       while (glm::length(colony.GetPosition() - position) <=
              colony.GetRadius() + quantity) {
@@ -135,6 +142,7 @@ void World::GenerateFoodSources(const size_t num_food_sources) {
 }
 
 void World::HandleBoundCollisions(Ant& ant) {
+  // Using to handle corner boundary collisions.
   bool is_collision = false;
 
   if ((ant.GetPosition().x + (ant.GetWidth() / 2.0f) >= kWindowWidth &&

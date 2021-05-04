@@ -2,7 +2,7 @@
 
 namespace antsim {
 
-AntSimApp::AntSimApp() : world_() {
+AntSimApp::AntSimApp() : world_(kSimSpeed, kNumColonies, kNumFoodSources) {
   ci::app::setFullScreen();
 }
 

@@ -175,7 +175,7 @@ const std::vector<MarkablePoint*>& Ant::GetMarkers() const {
   return markable_points_;
 }
 
-void Ant::SetMarkers(const std::vector<MarkablePoint*>& food_markers) {
+void Ant::SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers) {
   food_markers_ = food_markers;
 }
 

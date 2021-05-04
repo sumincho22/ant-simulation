@@ -33,4 +33,4 @@ float FoodSource::GetQuantity() const {
   return quantity_;
 }
 
-}
+}  // namespace antsim

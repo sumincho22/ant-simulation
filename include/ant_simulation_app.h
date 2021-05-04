@@ -21,6 +21,11 @@ class AntSimApp : public ci::app::App {
  private:
   const ci::Color kBackgroundColor = ci::Color("black");
 
+  // World parameters
+  const size_t kSimSpeed = 2;
+  const size_t kNumColonies = 1;
+  const size_t kNumFoodSources = 1;
+
   World world_;
 };
 

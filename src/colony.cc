@@ -9,6 +9,7 @@ Colony::Colony(const size_t population, const glm::vec2& position,
 
   GenerateAnts(population);
 }
+
 void Colony::AdvanceOneFrame() {
   for (Ant& ant : ants_) {
     ant.AdvanceOneFrame();
