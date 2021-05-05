@@ -5,11 +5,15 @@
 using antsim::World;
 using antsim::Colony;
 using antsim::FoodSource;
+using antsim::Ant;
 
 // Testing constants
-const size_t kTestNum = 3;
 const float kWindowWidth = 1920;
 const float kWindowHeight = 1080;
+
+const size_t kTestNum = 3;
+const glm::vec2 kTestPos(50, 90);
+const float kTestRadius = 5.0f;
 
 TEST_CASE("World", "[world]") {
   World world(kTestNum, kTestNum, kTestNum);
@@ -18,8 +22,8 @@ TEST_CASE("World", "[world]") {
   std::vector<FoodSource> food_sources = world.GetFoodSources();
 
   SECTION("Constructor") {
-    REQUIRE(world.GetColonies().size() == kTestNum);
-    REQUIRE(world.GetFoodSources().size() == kTestNum);
+    REQUIRE(colonies.size() == kTestNum);
+    REQUIRE(food_sources.size() == kTestNum);
   }
 
   SECTION("Locations of colonies & food sources are different") {
@@ -43,6 +47,24 @@ TEST_CASE("World", "[world]") {
       REQUIRE(food_source.GetPosition().x < kWindowWidth);
       REQUIRE(food_source.GetPosition().y > 0);
       REQUIRE(food_source.GetPosition().y < kWindowHeight);
+    }
+  }
+}
+
+TEST_CASE("Colony", "[colony]") {
+  Colony colony(kTestNum, kTestPos, kTestRadius);
+
+  std::vector<Ant> ants = colony.GetAnts();
+
+  SECTION("Constructor") {
+    REQUIRE(ants.size() == kTestNum);
+    REQUIRE(colony.GetPosition() == kTestPos);
+    REQUIRE(colony.GetRadius() == kTestRadius);
+  }
+
+  SECTION("Ants are generated at the center of the colony") {
+    for (const Ant& ant : ants) {
+      REQUIRE(ant.GetPosition() == colony.GetPosition());
     }
   }
 }
