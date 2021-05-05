@@ -46,6 +46,8 @@ class Ant {
   float GetHeight() const;
   Direction& GetDirection();
   const std::vector<MarkablePoint*>& GetHomeMarkers() const;
+  void SetHomeMarkers(const std::vector<MarkablePoint*>& home_markers);
+  const std::vector<MarkablePoint*>& GetFoodMarkers() const;
   void SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers);
 
  private:

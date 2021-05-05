@@ -129,13 +129,22 @@ void Ant:: ClearFoodMarkers() {
   food_marker_index_ = 0;
 }
 
-const std::vector<MarkablePoint*>& Ant::GetHomeMarkers() const {
-  return home_markers_;
+const std::vector<MarkablePoint*>& Ant::GetFoodMarkers() const {
+  return food_markers_;
 }
 
 void Ant::SetFoodMarkers(const std::vector<MarkablePoint*>& food_markers) {
   food_markers_ = food_markers;
   food_marker_index_ = 0;
+}
+
+const std::vector<MarkablePoint*>& Ant::GetHomeMarkers() const {
+  return home_markers_;
+}
+
+void Ant::SetHomeMarkers(const std::vector<MarkablePoint*>& home_markers) {
+  home_markers_ = home_markers;
+  food_marker_index_ = home_markers.size() - 1;
 }
 
 void Ant::UpdatePosition() {
