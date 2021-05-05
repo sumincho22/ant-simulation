@@ -175,4 +175,12 @@ bool World::IsAtLocation(const glm::vec2& ant_position,
   return glm::length(ant_position - location) <= distance;
 }
 
+const std::vector<Colony>& World::GetColonies() const {
+  return colonies_;
+}
+
+const std::vector<FoodSource>& World::GetFoodSources() const {
+  return food_sources_;
+}
+
 }  // namespace antsim

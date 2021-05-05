@@ -28,6 +28,9 @@ class World {
   void Render() const;
   void AdvanceOneFrame();
 
+  const std::vector<Colony>& GetColonies() const;
+  const std::vector<FoodSource>& GetFoodSources() const;
+
  private:
   const size_t kMaxFrames = 100;
 
