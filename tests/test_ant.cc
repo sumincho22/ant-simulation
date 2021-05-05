@@ -68,3 +68,41 @@ TEST_CASE("Colony", "[colony]") {
     }
   }
 }
+
+TEST_CASE("Food source", "[food_source]") {
+  FoodSource food_source(kTestPos, kTestNum);
+
+  SECTION("Constructor") {
+    REQUIRE(food_source.GetPosition() == kTestPos);
+    REQUIRE(food_source.GetQuantity() == kTestNum);
+    REQUIRE(food_source.GetRadius() == (float) kTestNum);
+  }
+
+  SECTION("DecreaseQuantity") {
+    auto val_before = food_source.GetQuantity();
+    food_source.DecreaseQuantity();
+    auto val_after = food_source.GetQuantity();
+
+    REQUIRE(val_after - val_before == -1);
+  }
+
+  SECTION("Quantity cannot be below zero") {
+    for (size_t i = 0; i < kTestNum; ++i) {
+      food_source.DecreaseQuantity();
+    }
+
+    // Calling the method after depleting the entire quantity
+    food_source.DecreaseQuantity();
+
+    REQUIRE(food_source.GetQuantity() == 0);
+  }
+
+  SECTION("UpdateSize") {
+    auto val_before = food_source.GetRadius();
+    food_source.DecreaseQuantity();
+    food_source.UpdateSize();
+    auto val_after = food_source.GetRadius();
+
+    REQUIRE(val_after - val_before == -1);
+  }
+}
