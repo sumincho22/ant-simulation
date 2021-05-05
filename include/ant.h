@@ -40,11 +40,15 @@ class Ant {
 
   const glm::vec2& GetPosition() const;
   const glm::vec2& GetVelocity() const;
-  State GetState() const;
-  void SetState(State state);
+
+  Direction& GetDirection();
+
   float GetWidth() const;
   float GetHeight() const;
-  Direction& GetDirection();
+
+  State GetState() const;
+  void SetState(State state);
+
   const std::vector<MarkablePoint*>& GetHomeMarkers() const;
   void SetHomeMarkers(const std::vector<MarkablePoint*>& home_markers);
   const std::vector<MarkablePoint*>& GetFoodMarkers() const;
