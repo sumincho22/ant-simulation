@@ -3,6 +3,7 @@
 #include "cinder/app/App.h"
 #include "cinder/app/RendererGl.h"
 #include "cinder/gl/gl.h"
+#include "cinder/audio/audio.h"
 
 #include "world.h"
 
@@ -15,11 +16,14 @@ class AntSimApp : public ci::app::App {
  public:
   AntSimApp();
 
+  void setup() override;
   void draw() override;
   void update() override;
 
  private:
   const ci::Color kBackgroundColor = ci::Color("black");
+
+  ci::audio::VoiceRef m_voice_;
 
   // World parameters
   const size_t kSimSpeed = 2;
